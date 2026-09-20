@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#c9a227" />
+<meta name="description" content="Live track your Critters on Call run — Domino-style status by booking code." />
+<meta name="robots" content="noindex, nofollow" />
+<title>Track · Critters on Call</title>
+<link rel="icon" type="image/png" href="assets/pyrenees-logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app">
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="assets/pyrenees-logo.png" alt="" width="36" height="36" />
+        <span>
+          <span class="brand-title">Critters on Call</span>
+          <span class="brand-sub">Sheehan Homestead</span>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div id="empty-state" class="stack" style="padding-top:2rem;text-align:center">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin:0 auto;color:var(--muted)" aria-hidden="true"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/></svg>
+      <h1 style="font-size:1.5rem" id="empty-title">Track a run</h1>
+      <p class="text-sm muted" id="empty-desc">Paste a track code, or run the live demo.</p>
+      <form id="lookup-form" class="grid-2" style="text-align:left;align-items:end">
+        <div class="field" style="grid-column:1 / -1">
+          <label class="sr-only" for="code-input">Track code</label>
+          <input id="code-input" type="text" placeholder="COC-XXXX" aria-label="Track code" style="text-transform:uppercase" />
+        </div>
+        <button class="btn btn-primary" type="submit" style="grid-column:1 / -1">Open</button>
+      </form>
+      <button class="btn btn-outline btn-block" type="button" id="demo-run-btn">Run live demo</button>
+    </div>
+
+    <div id="live-state" class="stack-sm" hidden>
+      <div>
+        <h1 style="font-size:1.5rem">Live track</h1>
+        <p class="text-sm muted" style="margin-top:0.25rem">Domino-style status — tap <span style="font-weight:600;color:var(--gold)">Demo step</span> and watch it move. This link is shareable.</p>
+      </div>
+
+      <div class="tracker">
+        <div class="tracker-top">
+          <p class="tracker-kicker">Critter Tracker</p>
+          <span class="live-badge">Live</span>
+        </div>
+        <div class="tracker-row">
+          <span class="tracker-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+          </span>
+          <div style="flex:1;min-width:0">
+            <p class="tracker-status-tag" id="st-tag">On the road</p>
+            <h2 class="tracker-status" id="st-label">En Route</h2>
+            <p class="text-sm muted" id="st-detail" style="margin-top:0.35rem">Your helper is rolling your way</p>
+          </div>
+          <div class="eta-box" id="eta-box">
+            <p class="eta-label">ETA</p>
+            <p class="eta-num tabular" id="eta-num">22</p>
+            <p class="eta-unit">min</p>
+          </div>
+        </div>
+        <div class="progress-rail" aria-hidden="true">
+          <div class="progress-fill" id="progress-fill" style="width:49%"></div>
+          <div class="progress-truck" id="progress-truck" style="left:49%">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+          </div>
+        </div>
+        <p class="progress-meta" id="progress-meta"></p>
+      </div>
+
+      <div class="card" style="border-width:2px">
+        <p class="text-xs muted" style="text-align:center;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem">Where's the herd?</p>
+        <ol class="status-grid" id="status-grid"></ol>
+        <div class="grid-2" style="margin-top:1rem">
+          <button class="btn btn-primary" type="button" id="demo-step-btn">Demo step</button>
+          <button class="btn btn-outline" type="button" id="share-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+            Share
+          </button>
+        </div>
+      </div>
+
+      <div class="card card-gold stack-sm" style="border-width:2px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem">
+          <div>
+            <p class="tracker-kicker" id="crew-label">Your helper</p>
+            <p class="font-display" id="crew-name" style="font-size:1.125rem;font-weight:600;margin-top:0.15rem">Helper</p>
+          </div>
+          <span class="pill" id="duration-badge">90 MIN</span>
+        </div>
+        <div>
+          <p class="text-xs muted" style="font-weight:600;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem">On this visit</p>
+          <div class="critter-chips" id="critter-chips"></div>
+        </div>
+        <div style="border:1px dashed rgba(201,162,39,0.3);border-radius:1rem;background:rgba(20,18,15,0.6);padding:0.75rem">
+          <p style="font-weight:600" id="visit-address"></p>
+          <p class="text-xs muted" id="visit-meta" style="margin-top:0.15rem;font-weight:500"></p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <a class="btn btn-outline btn-sm" href="book.html">Book another</a>
+        <a class="btn btn-primary btn-sm" href="index.html">Home</a>
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <div class="bottom-nav-inner">
+      <a class="nav-link" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Home
+      </a>
+      <a class="nav-link" href="book.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        Book
+      </a>
+      <a class="nav-link is-active" href="track.html" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/></svg>
+        Track
+      </a>
+      <a class="nav-link" href="spin.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>
+        Spin
+      </a>
+      <a class="nav-link" href="gold.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M2 9h20"/></svg>
+        Gold
+      </a>
+    </div>
+  </nav>
+</div>
+<script src="js/app.js"></script>
+<script src="js/track.js"></script>
+</body>
+</html>

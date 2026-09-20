@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#c9a227" />
+<meta name="description" content="Book Critters on Call — mobile petting zoo, farm visit, homeschool, mommy & me. Sheehan Homestead, Callahan FL." />
+<meta name="robots" content="noindex, nofollow" />
+<title>Book · Critters on Call</title>
+<link rel="icon" type="image/png" href="assets/pyrenees-logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app">
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="assets/pyrenees-logo.png" alt="" width="36" height="36" />
+        <span>
+          <span class="brand-title">Critters on Call</span>
+          <span class="brand-sub">Sheehan Homestead</span>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="stack">
+      <div>
+        <h1 style="font-size:1.5rem">Book</h1>
+        <p class="text-sm muted" style="margin-top:0.25rem">Mobile to your door. Farm visits, homeschool, and mommy &amp; me on the homestead.</p>
+      </div>
+
+      <div class="pkg-grid" id="pkg-grid" role="listbox" aria-label="Packages"></div>
+
+      <form id="book-form" class="stack-sm">
+        <div class="card stack-sm">
+          <div class="field">
+            <label>Package</label>
+            <div class="offer-row" id="offer-row"></div>
+            <p class="text-xs muted" id="offer-note"></p>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="date">Date</label>
+              <input id="date" type="date" required />
+            </div>
+            <div class="field">
+              <label for="time">Start</label>
+              <input id="time" type="time" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="guests">Headcount</label>
+            <input id="guests" type="number" min="1" max="500" value="12" />
+          </div>
+          <div id="address-block">
+            <div class="field" style="margin-bottom:0.75rem">
+              <label for="address">Service address</label>
+              <input id="address" type="text" placeholder="Street address" />
+            </div>
+            <div class="field">
+              <label for="city">City</label>
+              <input id="city" type="text" value="Callahan, FL" />
+            </div>
+          </div>
+          <p id="farm-note" class="text-xs muted" hidden style="border:1px solid var(--border);border-radius:0.75rem;background:var(--surface-2);padding:0.75rem">Visit us at Sheehan Homestead · Callahan, FL</p>
+          <div class="field">
+            <label for="notes">Notes</label>
+            <textarea id="notes" placeholder="Ages, accessibility, anything we should know…"></textarea>
+          </div>
+        </div>
+
+        <div class="estimate-row">
+          <div>
+            <p class="text-xs muted" style="text-transform:uppercase;letter-spacing:0.08em">Estimate</p>
+            <p class="estimate-price tabular" id="estimate-price">$499</p>
+            <p class="text-xs muted" id="estimate-hint">Tax and travel not included</p>
+          </div>
+          <button class="btn btn-primary" type="submit" id="confirm-btn">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <div class="bottom-nav-inner">
+      <a class="nav-link" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Home
+      </a>
+      <a class="nav-link is-active" href="book.html" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        Book
+      </a>
+      <a class="nav-link" href="track.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/></svg>
+        Track
+      </a>
+      <a class="nav-link" href="spin.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>
+        Spin
+      </a>
+      <a class="nav-link" href="gold.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M2 9h20"/></svg>
+        Gold
+      </a>
+    </div>
+  </nav>
+</div>
+<script src="js/app.js"></script>
+<script src="js/book.js"></script>
+</body>
+</html>
