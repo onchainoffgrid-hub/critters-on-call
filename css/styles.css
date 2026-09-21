@@ -749,3 +749,5 @@ p { margin: 0; }
 }
 .price-foot { font-size: 0.75rem; color: var(--muted); line-height: 1.45; }
 .wd-we { color: var(--accent); font-weight: 600; }
+.price-table th:nth-child(n+2),
+.price-table td:nth-child(n+2) { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
