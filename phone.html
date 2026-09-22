@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#0f172a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Doomscroll"/>
+<title>Phone Doomscroll — Critters on Call</title>
+<style>
+:root {
+  --bg:#0f172a; --card:#1e293b; --card2:#334155; --text:#f1f5f9; --muted:#94a3b8;
+  --fire:#dc2626; --money:#16a34a; --cold:#2563eb; --fb:#1877f2; --li:#0a66c2;
+  --done:#475569; --accent:#fbbf24;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { margin:0; padding:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,system-ui,Segoe UI,Roboto,sans-serif;
+  min-height:100%; }
+body { padding-bottom:calc(24px + env(safe-area-inset-bottom)); }
+.top {
+  position:sticky; top:0; z-index:50; background:rgba(15,23,42,.96);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid #1e293b; padding:calc(8px + env(safe-area-inset-top)) 10px 8px;
+}
+.brand { font-size:.72rem; color:var(--muted); text-align:center; margin:0 0 6px; letter-spacing:.02em; }
+.lanes { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+.lane-btn {
+  min-height:48px; border:0; border-radius:12px; font-weight:800; font-size:.85rem;
+  color:#fff; background:#334155; cursor:pointer; padding:8px 4px;
+}
+.lane-btn.active { outline:2px solid #fff; outline-offset:1px; }
+.lane-btn[data-lane="FIRE"].active,.lane-btn[data-lane="FIRE"] { background:var(--fire); }
+.lane-btn[data-lane="MONEY"].active,.lane-btn[data-lane="MONEY"] { background:var(--money); }
+.lane-btn[data-lane="COLD"].active,.lane-btn[data-lane="COLD"] { background:var(--cold); }
+.lane-btn[data-lane="FB"].active,.lane-btn[data-lane="FB"] { background:var(--fb); }
+.lane-btn[data-lane="LI"].active,.lane-btn[data-lane="LI"] { background:var(--li); }
+.lane-btn:not(.active) { opacity:.55; filter:grayscale(.3); }
+.progress {
+  text-align:center; font-size:.9rem; font-weight:700; color:var(--accent);
+  margin:8px 0 0; min-height:1.2em;
+}
+.paste-kit {
+  position:sticky; top:calc(96px + env(safe-area-inset-top)); z-index:40;
+  background:rgba(15,23,42,.97); border-bottom:1px solid #1e293b;
+  padding:8px 12px 10px; max-height:38vh; overflow:auto;
+}
+.paste-block { margin:0 0 8px; }
+.paste-block:last-child { margin-bottom:0; }
+.paste-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; }
+.paste-head span { font-size:.72rem; color:var(--muted); font-weight:600; }
+.copy-btn {
+  min-height:40px; min-width:72px; padding:0 14px; border:0; border-radius:10px;
+  background:#fbbf24; color:#0f172a; font-weight:800; font-size:.85rem; cursor:pointer;
+}
+.copy-btn.ok { background:#22c55e; color:#052e16; }
+.paste-text {
+  margin:0; background:var(--card); color:#e2e8f0; border-radius:10px; padding:10px 12px;
+  font-size:.78rem; line-height:1.4; white-space:pre-wrap; word-break:break-word;
+  font-family:inherit; max-height:12vh; overflow:auto;
+}
+.warn { color:#fbbf24; font-size:.75rem; margin:4px 0 0; text-align:center; }
+.main { padding:12px 12px 40px; max-width:640px; margin:0 auto; }
+.lane { display:none; }
+.lane.active { display:block; }
+.group-title {
+  font-size:.95rem; font-weight:800; color:var(--accent); margin:16px 0 8px;
+  padding-bottom:4px; border-bottom:1px solid #334155;
+}
+.card {
+  background:var(--card); border-radius:14px; padding:12px; margin:0 0 10px;
+  border:1px solid #334155;
+}
+.card.done { opacity:.45; filter:grayscale(.8); }
+.card.done .open { background:var(--done); }
+.card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:10px; }
+.name { font-weight:700; font-size:1.02rem; line-height:1.3; flex:1; }
+.tag {
+  flex-shrink:0; font-size:.65rem; font-weight:800; letter-spacing:.04em;
+  padding:4px 8px; border-radius:999px; background:#334155; color:#e2e8f0;
+}
+.tag-mailto { background:#7c3aed; }
+.tag-form { background:#059669; }
+.tag-other { background:#475569; }
+.actions { display:grid; grid-template-columns:1fr auto; gap:8px; }
+.open, .done {
+  display:flex; align-items:center; justify-content:center;
+  min-height:56px; border-radius:12px; font-weight:800; font-size:1.05rem;
+  text-decoration:none; border:0; cursor:pointer; color:#fff;
+}
+.open { background:#2563eb; }
+.lane[data-lane="FIRE"] .open { background:var(--fire); }
+.lane[data-lane="MONEY"] .open { background:var(--money); }
+.lane[data-lane="COLD"] .open { background:var(--cold); }
+.lane[data-lane="FB"] .open { background:var(--fb); }
+.lane[data-lane="LI"] .open { background:var(--li); }
+.card.tone-attn .open { background:#dc2626; }
+.card.tone-tam .open { background:#059669; }
+.card.tone-warm .open { background:#7c3aed; }
+.card.tone-need .open { background:#2563eb; }
+.done { background:#475569; min-width:88px; padding:0 16px; }
+.card.done .done { background:#22c55e; color:#052e16; }
+.foot { text-align:center; color:#64748b; font-size:.7rem; margin:24px 0 8px; line-height:1.4; }
+.reset {
+  display:block; width:100%; min-height:48px; margin:12px 0 0; border:1px solid #475569;
+  background:transparent; color:var(--muted); border-radius:12px; font-weight:600; cursor:pointer;
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <p class="brand">Critters on Call · Sheehan Homestead · Callahan FL</p>
+  <nav class="lanes" role="tablist">
+    <button type="button" class="lane-btn active" data-lane="FIRE" role="tab">FIRE</button>
+    <button type="button" class="lane-btn" data-lane="MONEY" role="tab">MONEY</button>
+    <button type="button" class="lane-btn" data-lane="COLD" role="tab">COLD</button>
+    <button type="button" class="lane-btn" data-lane="FB" role="tab">FB</button>
+    <button type="button" class="lane-btn" data-lane="LI" role="tab">LI</button>
+  </nav>
+  <div class="progress" id="progress">—</div>
+</header>
+
+<section class="paste-kit" id="pasteKit"></section>
+
+<main class="main">
+
+<section class="lane active" data-lane="FIRE" id="lane-FIRE">
+<article class="card tone-attn" data-id="FIRE-1" data-lane="FIRE">
+  <div class="card-top"><span class="name">1. Lauren Burnette / River City Science Academy</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:lburnette@rivercityscience.org?subject=Re%3A%20Your%20Oct-2%20petting%20zoo%20%E2%80%94%20meeting%20times&amp;body=Hi%20Lauren%2C%0A%0AGreat%20to%20hear%20you%20want%20to%20keep%20going%20%E2%80%94%20happy%20to%20meet%20this%20week.%20Does%20Tue%20or%20Wed%20afternoon%20work%20for%20a%20quick%20call/Zoom%20to%20lock%20logistics%20for%20Oct%202%20%288%3A20%E2%80%9311%3A20%29%20at%20the%20Violet%20%24600%20rate%3F%0A%0AAlso%20happy%20to%20send%20a%20short%20one-pager%20of%20what%20to%20expect%20on%20site.%0A%0AMichael%20%26%20Ann-Marie%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-1">Done</button>
+  </div>
+</article>
+<article class="card tone-attn" data-id="FIRE-2" data-lane="FIRE">
+  <div class="card-top"><span class="name">2. Wildlight / Elizabeth Bricknell (Ann-Marie)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:ebricknell@ccmcnet.com?subject=Re%3A%20Fall%20dates%3F%20%E2%80%94%20Oct%2024%20invoice%20check&amp;body=Hi%20Elizabeth%2C%0A%0AQuick%20check-in%20on%20Oct%2024%20Trunk%20or%20Treat%20%284%E2%80%936pm%29.%20Confirming%20paperwork%20is%20set%20after%20the%20hold-harmless%20%E2%80%94%20Ann-Marie%20will%20confirm/resend%20the%20invoice%20%28~%24800%29%20if%20you%20don%E2%80%99t%20already%20have%20it.%20Anything%20else%20you%20need%20from%20us%20before%20the%2024th%3F%0A%0AMichael%20/%20Ann-Marie%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-2">Done</button>
+  </div>
+</article>
+<article class="card tone-attn" data-id="FIRE-3" data-lane="FIRE">
+  <div class="card-top"><span class="name">3. Lauren Nelson / CTK Early Learning</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:lnelson@ctkearlylearning.com?subject=Re%3A%20Summer%20Petting%20Zoo%20Visit%20%E2%80%94%20invoice%20check&amp;body=Hi%20Lauren%2C%0A%0AChecking%20in%20on%20invoice%20%230112%20%28%24474.75%29%20for%20the%20summer%20petting%20zoo%20%E2%80%94%20did%20that%20clear%20on%20your%20end%2C%20or%20do%20you%20need%20it%20resent%3F%0A%0AThanks%21%0AAnn-Marie%20/%20Michael" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-3">Done</button>
+  </div>
+</article>
+<article class="card tone-attn" data-id="FIRE-4" data-lane="FIRE">
+  <div class="card-top"><span class="name">4. Charlene Gross / ELC Duval Falladay</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:cgross@elcduval.org?subject=Re%3A%20Falladay%2010/24%20%E2%80%94%20deposit/invoice&amp;body=Hi%20Charlene%2C%0A%0AExcited%20for%20Falladay%20on%2010/24.%20Quick%20note%20that%20we%E2%80%99re%20still%20showing%20deposit/payment%20open%20on%20our%20side%20for%20the%20petting%20zoo%20%E2%80%94%20want%20to%20make%20sure%20Marco%20Polo%E2%80%99s%20%24500%20sponsorship/invoice%20is%20sorted.%20Want%20me%20to%20resend%20the%20invoice%20link%3F%0A%0AMichael%20%26%20Ann-Marie" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-4">Done</button>
+  </div>
+</article>
+<article class="card tone-attn" data-id="FIRE-5" data-lane="FIRE">
+  <div class="card-top"><span class="name">5. Arize Together / Jillian</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:jillian@arizetogether.org?subject=Re%3A%20Arize%20Together%20Donation&amp;body=Hi%20Jillian%2C%0A%0AThanks%20for%20reaching%20out%20about%2012/11.%20We%20can%20look%20at%20Violet/comp%20pass%20options%20for%20member%20experiences%20%E2%80%94%20what%20format%20are%20you%20imagining%20%28on-farm%20tickets%20vs%20mini%20mobile%20visit%29%3F%20Happy%20to%20propose%201%E2%80%932%20packages%20that%20fit%20a%20nonprofit%20budget.%0A%0AMichael%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-5">Done</button>
+  </div>
+</article>
+<article class="card tone-tam" data-id="FIRE-6" data-lane="FIRE">
+  <div class="card-top"><span class="name">6. Ascension St. Vincent&#x27;s Foundation</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:thefoundation@ascension.org?subject=Community%20partnership%20inquiry%20%E2%80%94%20Critters%20on%20Call%20/%20Sheehan%20Homestead&amp;body=Hi%20Ascension%20St.%20Vincent%27s%20Foundation%20team%2C%0A%0AMichael%20Sheehan%20with%20Sheehan%20Homestead%20/%20Critters%20on%20Call%20%28Jax%29.%20We%20bring%20animal%20therapy%20/%20mini%20petting%20zoo%20experiences%20to%20community%20and%20wellness%20events%20across%20NEFL.%20Would%20love%20to%20explore%20partnering%20for%20a%20Foundation%20or%20hospital%20community%20event%20%28Medical%20Mission%20at%20Home%20style%2C%20family%20days%2C%20outreach%29.%20Who%20on%20your%20team%20handles%20community%20partnerships%20/%20event%20vendors%3F%0A%0AThanks%21%0AMichael%20Sheehan%0A914-263-1311%0Asheehanhomestead.com" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-6">Done</button>
+  </div>
+</article>
+<article class="card tone-tam" data-id="FIRE-7" data-lane="FIRE">
+  <div class="card-top"><span class="name">7. Amber Johnson (Ascension inbound)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:amber.johnson1@ascension.org?subject=Thanks%20for%20contacting%20Sheehan%20Homestead&amp;body=Hi%20Amber%2C%0A%0AThanks%20for%20reaching%20out%20via%20our%20site%20%E2%80%94%20just%20checking%20we%20have%20the%20right%20email%20%28wanted%20to%20confirm%20%40ascension.org%29.%20How%20can%20we%20help%20%E2%80%94%20team%20event%2C%20family%20day%2C%20or%20animal%20visit%20for%20patients/staff%3F%0A%0AMichael%20Sheehan%0ASheehan%20Homestead%20/%20Critters%20on%20Call%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-7">Done</button>
+  </div>
+</article>
+<article class="card tone-warm" data-id="FIRE-8" data-lane="FIRE">
+  <div class="card-top"><span class="name">8. Tamika / Spark Pediatrics PPEC</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:tamikah@sparkpediatrics.com?subject=Re%3A%20PPEC%20Mini%20Petting%20Zoo&amp;body=Hi%20Tamika%2C%0A%0AJust%20a%20soft%20bump%20on%20the%20mini%20petting%20zoo%20for%20Spark%20%E2%80%94%20any%20word%20from%20your%20Regional%20Director%20on%20dates%3F%20Happy%20to%20hold%20a%20weekday%20morning%20that%20works%20for%20Cassat%20or%20Arlington.%0A%0AMichael%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-8">Done</button>
+  </div>
+</article>
+<article class="card tone-need" data-id="FIRE-9" data-lane="FIRE">
+  <div class="card-top"><span class="name">9. Diane Duffy (Osprey Village)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:dduffy@osprey-village.com?subject=Thanks%20for%20reaching%20out%20%E2%80%94%20Sheehan%20Homestead&amp;body=Hi%20Diane%2C%0A%0AThanks%20for%20reaching%20out%20to%20Sheehan%20Homestead%20/%20Critters%20on%20Call%21%20We%20do%20mobile%20petting%20zoos%2C%20Bunny%20Haven%20visits%2C%20and%20farm%20experiences%20in%20the%20Jax%20area.%20What%20date/time%20and%20group%20size%20are%20you%20looking%20at%3F%0A%0AHappy%20to%20send%20options%20%2B%20pricing.%0A%0AMichael%20Sheehan%0A914-263-1311%0Asheehanhomestead.com" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-9">Done</button>
+  </div>
+</article>
+<article class="card tone-need" data-id="FIRE-10" data-lane="FIRE">
+  <div class="card-top"><span class="name">10. Theresa Little (Assumption)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:tlittle@assumptionjax.org?subject=Thanks%20for%20reaching%20out%20%E2%80%94%20Sheehan%20Homestead&amp;body=Hi%20Theresa%2C%0A%0AThanks%20for%20reaching%20out%20to%20Sheehan%20Homestead%20/%20Critters%20on%20Call%21%20We%20do%20mobile%20petting%20zoos%2C%20Bunny%20Haven%20visits%2C%20and%20farm%20experiences%20in%20the%20Jax%20area.%20What%20date/time%20and%20group%20size%20are%20you%20looking%20at%3F%0A%0AHappy%20to%20send%20options%20%2B%20pricing.%0A%0AMichael%20Sheehan%0A914-263-1311%0Asheehanhomestead.com" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-10">Done</button>
+  </div>
+</article>
+<article class="card tone-need" data-id="FIRE-11" data-lane="FIRE">
+  <div class="card-top"><span class="name">11. Kathy Millspaw (UNF)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:kathy.millspaw@unf.edu?subject=Thanks%20for%20reaching%20out%20%E2%80%94%20Sheehan%20Homestead&amp;body=Hi%20Kathy%2C%0A%0AThanks%20for%20reaching%20out%20to%20Sheehan%20Homestead%20/%20Critters%20on%20Call%21%20We%20do%20mobile%20petting%20zoos%2C%20Bunny%20Haven%20visits%2C%20and%20farm%20experiences%20in%20the%20Jax%20area.%20What%20date/time%20and%20group%20size%20are%20you%20looking%20at%3F%0A%0AHappy%20to%20send%20options%20%2B%20pricing.%0A%0AMichael%20Sheehan%0A914-263-1311%0Asheehanhomestead.com" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-11">Done</button>
+  </div>
+</article>
+<article class="card tone-need" data-id="FIRE-12" data-lane="FIRE">
+  <div class="card-top"><span class="name">12. Desirae George (ProSocial)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:info@prosocialbehavioralhealth.org?subject=Thanks%20for%20reaching%20out%20%E2%80%94%20Sheehan%20Homestead&amp;body=Hi%20Desirae%2C%0A%0AThanks%20for%20reaching%20out%20to%20Sheehan%20Homestead%20/%20Critters%20on%20Call%21%20We%20do%20mobile%20petting%20zoos%2C%20Bunny%20Haven%20visits%2C%20and%20farm%20experiences%20in%20the%20Jax%20area.%20What%20date/time%20and%20group%20size%20are%20you%20looking%20at%3F%0A%0AHappy%20to%20send%20options%20%2B%20pricing.%0A%0AMichael%20Sheehan%0A914-263-1311%0Asheehanhomestead.com" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-12">Done</button>
+  </div>
+</article>
+<article class="card tone-need" data-id="FIRE-13" data-lane="FIRE">
+  <div class="card-top"><span class="name">13. Kathy McLearn</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:kmclearn12@gmail.com?subject=Thanks%20for%20reaching%20out%20%E2%80%94%20Sheehan%20Homestead&amp;body=Hi%20Kathy%2C%0A%0AThanks%20for%20reaching%20out%20to%20Sheehan%20Homestead%20/%20Critters%20on%20Call%21%20We%20do%20mobile%20petting%20zoos%2C%20Bunny%20Haven%20visits%2C%20and%20farm%20experiences%20in%20the%20Jax%20area.%20What%20date/time%20and%20group%20size%20are%20you%20looking%20at%3F%0A%0AHappy%20to%20send%20options%20%2B%20pricing.%0A%0AMichael%20Sheehan%0A914-263-1311%0Asheehanhomestead.com" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-13">Done</button>
+  </div>
+</article>
+<article class="card tone-attn" data-id="FIRE-14" data-lane="FIRE">
+  <div class="card-top"><span class="name">14. marieljaster Mini PZ (unpaid)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:marieljaster@gmail.com?subject=Quick%20follow-up%20%E2%80%94%20Sheehan%20Homestead&amp;body=Hi%2C%0A%0AFriendly%20reminder%20that%20%24211.90%20remains%20due%20on%20your%20mini%20petting%20zoo%20%28invoice%20184%29.%20Want%20me%20to%20resend%20the%20PayPal%20link%3F%0A%0AAnn-Marie%20/%20Michael" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-14">Done</button>
+  </div>
+</article>
+<article class="card tone-attn" data-id="FIRE-15" data-lane="FIRE">
+  <div class="card-top"><span class="name">15. mbeck River City Intracoastal Mini PZ</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:mbeck@rivercityscience.org?subject=Quick%20follow-up%20%E2%80%94%20Sheehan%20Homestead&amp;body=Hi%20Madelynne%2C%0A%0AChecking%20in%20%E2%80%94%20showing%20%24190%20still%20due%20on%20the%2010/15%20mini%20PZ%20%28invoice%20204%29.%20Need%20the%20payment%20link%20resent%3F%0A%0AAnn-Marie" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FIRE-15">Done</button>
+  </div>
+</article>
+</section>
+<section class="lane" data-lane="MONEY" id="lane-MONEY">
+<h2 class="group-title">1. Regional subscription (senior / PPEC)</h2>
+<article class="card" data-id="MONEY-R1" data-lane="MONEY">
+  <div class="card-top"><span class="name">1. Vicar&#x27;s Landing (Ponte Vedra / Sawgrass)</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://vicarslanding.com/contact/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R1">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R2" data-lane="MONEY">
+  <div class="card-top"><span class="name">2. Fleet Landing Nocatee</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.fleetlanding.com/nocatee/contact" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R2">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R3" data-lane="MONEY">
+  <div class="card-top"><span class="name">3. Windsor at San Pablo</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://info.legendseniorliving.com/san-pablo-request-a-visit" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R3">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R4" data-lane="MONEY">
+  <div class="card-top"><span class="name">4. Gables of Jacksonville</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://info.legendseniorliving.com/the-gables-of-jacksonville" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R4">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R5" data-lane="MONEY">
+  <div class="card-top"><span class="name">5. Osprey Village Amelia</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://osprey-village.com/contact/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R5">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R6" data-lane="MONEY">
+  <div class="card-top"><span class="name">6. Canterfield of Clay</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.canterfieldseniorliving.com/jacksonville-contact" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R6">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R7" data-lane="MONEY">
+  <div class="card-top"><span class="name">7. Sodalis Jacksonville</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://sodalissenior.com/jacksonville-contact-form/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R7">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R8" data-lane="MONEY">
+  <div class="card-top"><span class="name">8. Brookdale Southside</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.brookdale.com/en/communities/brookdale-southside.html" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R8">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R9" data-lane="MONEY">
+  <div class="card-top"><span class="name">9. Brookdale Orange Park</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.brookdale.com/en/communities/brookdale-orange-park.html" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R9">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R10" data-lane="MONEY">
+  <div class="card-top"><span class="name">10. Senior Living at the Greens</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://seniorlivingatthegreens.com/contact/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R10">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R11" data-lane="MONEY">
+  <div class="card-top"><span class="name">11. Blake at St. Johns (Contact Us)</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.qslmseniorliving.com/senior-living/fl/st-johns/county-rd-210/contact-us" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R11">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R12" data-lane="MONEY">
+  <div class="card-top"><span class="name">12. Orange Park Rehab (Critter Club)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:gnldelivery4@gmail.com?subject=Critter%20Club%20quarterly%20follow-up%20%E2%80%94%20Critters%20on%20Call&amp;body=Hi%20%E2%80%94%20Michael%20Sheehan%20with%20Sheehan%20Homestead%20/%20Critters%20on%20Call.%20We%20do%20recurring%20animal%20therapy%20visits%20for%20senior%20communities%20across%20Jacksonville%2C%20plus%20mini%20petting%20zoos%20for%20one-off%20events.%20Recurring%20is%20%24150/month%20or%20%24185%20quarterly%3B%20one-offs%20are%20typically%20%24250%E2%80%93400.%20Would%20love%20to%20start%20a%20conversation%20with%20your%20activities%20/%20life%20enrichment%20team.%20Thanks%21%0A%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R12">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R13" data-lane="MONEY">
+  <div class="card-top"><span class="name">13. Palm Garden Jax (Critter Club)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:patrice.pusha@palmgarden.com?subject=Critter%20Club%20monthly%20%E2%80%94%20reconnect%20Critters%20on%20Call&amp;body=Hi%20%E2%80%94%20Michael%20Sheehan%20with%20Sheehan%20Homestead%20/%20Critters%20on%20Call.%20We%20do%20recurring%20animal%20therapy%20visits%20for%20senior%20communities%20across%20Jacksonville%2C%20plus%20mini%20petting%20zoos%20for%20one-off%20events.%20Recurring%20is%20%24150/month%20or%20%24185%20quarterly%3B%20one-offs%20are%20typically%20%24250%E2%80%93400.%20Would%20love%20to%20start%20a%20conversation%20with%20your%20activities%20/%20life%20enrichment%20team.%20Thanks%21%0A%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R13">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R14" data-lane="MONEY">
+  <div class="card-top"><span class="name">14. Seniors Jacksonville tickler</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:sales@seniorsjacksonville.com?subject=Animal%20therapy%20visits%20%E2%80%94%20Critters%20on%20Call&amp;body=Hi%20%E2%80%94%20Michael%20Sheehan%20with%20Sheehan%20Homestead%20/%20Critters%20on%20Call.%20We%20do%20recurring%20animal%20therapy%20visits%20for%20senior%20communities%20across%20Jacksonville%2C%20plus%20mini%20petting%20zoos%20for%20one-off%20events.%20Recurring%20is%20%24150/month%20or%20%24185%20quarterly%3B%20one-offs%20are%20typically%20%24250%E2%80%93400.%20Would%20love%20to%20start%20a%20conversation%20with%20your%20activities%20/%20life%20enrichment%20team.%20Thanks%21%0A%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R14">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-R15" data-lane="MONEY">
+  <div class="card-top"><span class="name">15. DLC Jax PPEC (enrollment@)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:enrollment@dlcjax.org?subject=Animal%20therapy%20visits%20for%20DLC%20%E2%80%94%20Critters%20on%20Call&amp;body=Hi%20%E2%80%94%20Michael%20Sheehan%20with%20Sheehan%20Homestead%20/%20Critters%20on%20Call.%20We%20do%20recurring%20animal%20therapy%20visits%20for%20senior%20communities%20across%20Jacksonville%2C%20plus%20mini%20petting%20zoos%20for%20one-off%20events.%20Recurring%20is%20%24150/month%20or%20%24185%20quarterly%3B%20one-offs%20are%20typically%20%24250%E2%80%93400.%20Would%20love%20to%20start%20a%20conversation%20with%20your%20activities%20/%20life%20enrichment%20team.%20Thanks%21%0A%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-R15">Done</button>
+  </div>
+</article>
+<h2 class="group-title">2. Violet / edu</h2>
+<article class="card" data-id="MONEY-E1" data-lane="MONEY">
+  <div class="card-top"><span class="name">1. RCSA Baymeadows / Innovation</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://rivercityscience.org/contact-rcsa" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E1">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E2" data-lane="MONEY">
+  <div class="card-top"><span class="name">2. RCSA Intracoastal campus form</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://rivercityscience.org/contact-rcsa" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E2">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E3" data-lane="MONEY">
+  <div class="card-top"><span class="name">3. RCSA Intracoastal direct email</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:intracoastal@rivercityscience.org?subject=Mobile%20petting%20zoo%20/%20field%20trip%20%E2%80%94%20Critters%20on%20Call&amp;body=Hi%20%E2%80%94%20Michael%20Sheehan%20with%20Sheehan%20Homestead%20/%20Critters%20on%20Call.%20We%20bring%20mobile%20petting%20zoos%20and%20farm%20field%20trips%20to%20Jax%20schools%2C%20academies%2C%20Montessori%2C%20and%20VPK.%20Field%20trips%20prefer%20%24299%20/%20%24499%20on-farm%3B%20mobile%20mini%20typically%20~%24380%E2%80%93400%20%28Violet%20partner%20~50%25%20off%20list%20or%20%242/person%20when%20fundraising%29.%20Happy%20to%20hold%20animals%20for%20your%20next%20festival%20or%20class%20visit.%0A%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E3">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E4" data-lane="MONEY">
+  <div class="card-top"><span class="name">4. RCSA Intracoastal unpaid (mbeck inv 204)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:mbeck@rivercityscience.org?subject=Invoice%20204%20Mini%20PZ%20%E2%80%94%20payment%20check-in&amp;body=Hi%20Madelynne%2C%0A%0AChecking%20in%20%E2%80%94%20showing%20%24190%20still%20due%20on%20the%2010/15%20mini%20PZ%20%28invoice%20204%29.%20Need%20the%20payment%20link%20resent%3F%0A%0AAnn-Marie%20/%20Michael%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E4">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E5" data-lane="MONEY">
+  <div class="card-top"><span class="name">5. Montessori Tides</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.montessoritides.com/contact-us/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E5">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E6" data-lane="MONEY">
+  <div class="card-top"><span class="name">6. Amelia Island Montessori</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.ameliaislandmontessori.com/contact" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E6">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E7" data-lane="MONEY">
+  <div class="card-top"><span class="name">7. A Child&#x27;s Place Montessori</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="http://achildsplace.info/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E7">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E8" data-lane="MONEY">
+  <div class="card-top"><span class="name">8. Assumption Catholic / Theresa Little</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.assumptionjax.org/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E8">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E9" data-lane="MONEY">
+  <div class="card-top"><span class="name">9. Blessed Trinity Catholic (VPK)</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.blessedtrinitycatholicschool.org/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E9">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E10" data-lane="MONEY">
+  <div class="card-top"><span class="name">10. CTK Early Learning (Lauren Nelson invoice)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:lnelson@ctkearlylearning.com?subject=Invoice%20%230112%20summer%20PZ%20check-in&amp;body=Hi%20Lauren%2C%0A%0AChecking%20in%20on%20invoice%20%230112%20%28%24474.75%29%20for%20the%20summer%20petting%20zoo%20%E2%80%94%20did%20that%20clear%2C%20or%20need%20it%20resent%3F%0A%0AAnn-Marie%20/%20Michael%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E10">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E11" data-lane="MONEY">
+  <div class="card-top"><span class="name">11. JU Student Engagement</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.ju.edu/campuslife/studentactivities/index.php" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E11">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-E12" data-lane="MONEY">
+  <div class="card-top"><span class="name">12. UNF Kathy Millspaw inbound</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:kathy.millspaw@unf.edu?subject=Following%20up%20on%20your%20Sheehan%20Homestead%20inquiry&amp;body=Hi%20Kathy%2C%0A%0AThanks%20for%20reaching%20out%20via%20our%20site%20%E2%80%94%20how%20can%20we%20help%20with%20a%20campus%20or%20family%20event%3F%0A%0AMichael%20Sheehan%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-E12">Done</button>
+  </div>
+</article>
+<h2 class="group-title">3. Enterprise / HOA / events</h2>
+<article class="card" data-id="MONEY-X1" data-lane="MONEY">
+  <div class="card-top"><span class="name">1. Ascension St. Vincent&#x27;s Foundation</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:thefoundation@ascension.org?subject=Community%20animal%20experience%20%E2%80%94%20Critters%20on%20Call&amp;body=Hi%20%E2%80%94%20Michael%20Sheehan%20with%20Sheehan%20Homestead%20/%20Critters%20on%20Call.%20We%20run%20mobile%20petting%20zoos%20and%20animal%20experiences%20for%20HOA/CDD%20amenity%20events%2C%20corporate%20family%20days%2C%20and%20hospital%20foundation%20/%20community%20outreach.%20Typical%20one-off%20events%20%24250%E2%80%93400%20%28larger%20festivals%20higher%29.%20Would%20love%20to%20explore%20a%20date%20with%20your%20events%20/%20amenity%20/%20foundation%20team.%0A%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X1">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X2" data-lane="MONEY">
+  <div class="card-top"><span class="name">2. Ascension Foundation events</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:fljacfoundationevents@ascension.org?subject=Event%20/%20sponsorship%20animal%20experience%20inquiry&amp;body=Hi%20%E2%80%94%20Michael%20Sheehan%20with%20Sheehan%20Homestead%20/%20Critters%20on%20Call.%20We%20run%20mobile%20petting%20zoos%20and%20animal%20experiences%20for%20HOA/CDD%20amenity%20events%2C%20corporate%20family%20days%2C%20and%20hospital%20foundation%20/%20community%20outreach.%20Typical%20one-off%20events%20%24250%E2%80%93400%20%28larger%20festivals%20higher%29.%20Would%20love%20to%20explore%20a%20date%20with%20your%20events%20/%20amenity%20/%20foundation%20team.%0A%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X2">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X3" data-lane="MONEY">
+  <div class="card-top"><span class="name">3. Ascension Foundation community outreach</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://givestvincents.org/community-outreach/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X3">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X4" data-lane="MONEY">
+  <div class="card-top"><span class="name">4. Mayo Clinic FL Event Sponsorship</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://apply.yourcausegrants.com/apply/programs/12cb227c-e0a7-4a3e-9a67-ca6f0129e58f" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X4">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X5" data-lane="MONEY">
+  <div class="card-top"><span class="name">5. Baptist Supplier Engagement</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.baptistjax.com/about-us/supplier-engagement" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X5">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X6" data-lane="MONEY">
+  <div class="card-top"><span class="name">6. Durbin Crossing Living contact</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://durbincrossingliving.com/contact/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X6">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X7" data-lane="MONEY">
+  <div class="card-top"><span class="name">7. Glen St. Johns CDD contacts</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.glenstjohnscdd.org/contacts" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X7">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X8" data-lane="MONEY">
+  <div class="card-top"><span class="name">8. Wildlight / East Nassau events</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://wildlight.com/whats-happening/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X8">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X9" data-lane="MONEY">
+  <div class="card-top"><span class="name">9. Wildlight Elizabeth Bricknell (Oct 24)</span><span class="tag tag-mailto">MAILTO</span></div>
+  <div class="actions">
+    <a class="open" href="mailto:ebricknell@ccmcnet.com?subject=Oct%2024%20Trunk%20or%20Treat%20%E2%80%94%20invoice%20/%20hold-harmless%20check-in&amp;body=Hi%20Elizabeth%2C%0A%0AQuick%20check-in%20on%20Oct%2024%20Trunk%20or%20Treat%20%284%E2%80%936pm%29.%20Confirming%20paperwork%20is%20set%20after%20the%20hold-harmless%20%E2%80%94%20Ann-Marie%20will%20confirm/resend%20the%20invoice%20%28~%24868.41%29%20if%20you%20don%27t%20already%20have%20it.%20Anything%20else%20before%20the%2024th%3F%0A%0AMichael%20/%20Ann-Marie%0A914-263-1311" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X9">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X10" data-lane="MONEY">
+  <div class="card-top"><span class="name">10. eTown / Cypress Bluff CDD</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://cypressbluffcdd.com/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X10">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X11" data-lane="MONEY">
+  <div class="card-top"><span class="name">11. Tamaya amenities (Beach CDD)</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://tamayaamenities.com/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X11">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X12" data-lane="MONEY">
+  <div class="card-top"><span class="name">12. Bartram Springs CDD</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://bartramspringscdd.com/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X12">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X13" data-lane="MONEY">
+  <div class="card-top"><span class="name">13. Aberdeen CDD</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://aberdeencdd.com/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X13">Done</button>
+  </div>
+</article>
+<article class="card" data-id="MONEY-X14" data-lane="MONEY">
+  <div class="card-top"><span class="name">14. VyStar contact (corp events)</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://vystarcu.org/contact-us" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="MONEY-X14">Done</button>
+  </div>
+</article>
+</section>
+<section class="lane" data-lane="COLD" id="lane-COLD">
+<article class="card" data-id="COLD-1" data-lane="COLD">
+  <div class="card-top"><span class="name">1. Vicar&#x27;s Landing (Ponte Vedra / Sawgrass)</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://vicarslanding.com/contact/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-1">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-2" data-lane="COLD">
+  <div class="card-top"><span class="name">2. Discovery Commons San Pablo</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://discoverycommons.com/contact-discovery-commons/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-2">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-3" data-lane="COLD">
+  <div class="card-top"><span class="name">3. Discovery Village brand contact</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://discoveryvillages.com/contact-discovery-village/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-3">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-4" data-lane="COLD">
+  <div class="card-top"><span class="name">4. Sunrise of Jacksonville</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.sunriseseniorliving.com/communities/fl/sunrise-of-jacksonville" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-4">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-5" data-lane="COLD">
+  <div class="card-top"><span class="name">5. Blake at St. Johns</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.qslmseniorliving.com/senior-living/fl/st-johns/county-rd-210/contact-us" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-5">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-6" data-lane="COLD">
+  <div class="card-top"><span class="name">6. Fleet Landing Nocatee</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.fleetlanding.com/nocatee/contact" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-6">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-7" data-lane="COLD">
+  <div class="card-top"><span class="name">7. Windsor at San Pablo</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://info.legendseniorliving.com/san-pablo-request-a-visit" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-7">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-8" data-lane="COLD">
+  <div class="card-top"><span class="name">8. Gables of Jacksonville</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://info.legendseniorliving.com/the-gables-of-jacksonville" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-8">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-9" data-lane="COLD">
+  <div class="card-top"><span class="name">9. Osprey Village Amelia</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://osprey-village.com/contact/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-9">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-10" data-lane="COLD">
+  <div class="card-top"><span class="name">10. Canterfield of Clay</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.canterfieldseniorliving.com/jacksonville-contact" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-10">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-11" data-lane="COLD">
+  <div class="card-top"><span class="name">11. Sodalis Jacksonville</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://sodalissenior.com/jacksonville-contact-form/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-11">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-12" data-lane="COLD">
+  <div class="card-top"><span class="name">12. Lakeside at Amelia</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.lakesideamelia.com/contact-us/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-12">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-13" data-lane="COLD">
+  <div class="card-top"><span class="name">13. Brookdale Southside</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.brookdale.com/en/communities/brookdale-southside.html" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-13">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-14" data-lane="COLD">
+  <div class="card-top"><span class="name">14. Brookdale Orange Park</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.brookdale.com/en/communities/brookdale-orange-park.html" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-14">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-15" data-lane="COLD">
+  <div class="card-top"><span class="name">15. Brookdale Southpoint</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.brookdale.com/en/communities/brookdale-southpoint.html" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-15">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-16" data-lane="COLD">
+  <div class="card-top"><span class="name">16. Senior Living at the Greens</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://seniorlivingatthegreens.com/contact/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-16">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-17" data-lane="COLD">
+  <div class="card-top"><span class="name">17. Angels of Care PPEC</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://angelsofcare.com/contact-us/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-17">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-18" data-lane="COLD">
+  <div class="card-top"><span class="name">18. Advanced Care Partners</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://advancedcarepartners.com/contact-us/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-18">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-19" data-lane="COLD">
+  <div class="card-top"><span class="name">19. Fletcher&#x27;s Tender Care</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://fletcherstendercare.com/contact/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-19">Done</button>
+  </div>
+</article>
+<article class="card" data-id="COLD-20" data-lane="COLD">
+  <div class="card-top"><span class="name">20. Tender Care St. Aug refer</span><span class="tag tag-form">FORM</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.tcms.care/refer/" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="COLD-20">Done</button>
+  </div>
+</article>
+</section>
+<section class="lane" data-lane="FB" id="lane-FB">
+<p class="warn">POST in groups only — never DM members (timeout risk).</p>
+<article class="card" data-id="FB-1" data-lane="FB">
+  <div class="card-top"><span class="name">1. FB search: Callahan moms groups</span><span class="tag tag-other">SEARCH</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.facebook.com/search/groups/?q=Callahan%20moms" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FB-1">Done</button>
+  </div>
+</article>
+<article class="card" data-id="FB-2" data-lane="FB">
+  <div class="card-top"><span class="name">2. FB search: Jax homeschool moms</span><span class="tag tag-other">SEARCH</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.facebook.com/search/groups/?q=Jacksonville%20homeschool%20moms" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FB-2">Done</button>
+  </div>
+</article>
+<article class="card" data-id="FB-3" data-lane="FB">
+  <div class="card-top"><span class="name">3. FB search: Amelia moms</span><span class="tag tag-other">SEARCH</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.facebook.com/search/groups/?q=Amelia%20Island%20moms" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FB-3">Done</button>
+  </div>
+</article>
+<article class="card" data-id="FB-4" data-lane="FB">
+  <div class="card-top"><span class="name">4. FB: your page (post/reel)</span><span class="tag tag-other">PAGE</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.facebook.com/sheehanhomestead" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="FB-4">Done</button>
+  </div>
+</article>
+</section>
+<section class="lane" data-lane="LI" id="lane-LI">
+<article class="card" data-id="LI-1" data-lane="LI">
+  <div class="card-top"><span class="name">1. LinkedIn: activities director Jax senior</span><span class="tag tag-other">SEARCH</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.linkedin.com/search/results/people/?keywords=activities%20director%20Jacksonville%20FL%20senior%20living" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="LI-1">Done</button>
+  </div>
+</article>
+<article class="card" data-id="LI-2" data-lane="LI">
+  <div class="card-top"><span class="name">2. LinkedIn: life enrichment Jax</span><span class="tag tag-other">SEARCH</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.linkedin.com/search/results/people/?keywords=life%20enrichment%20director%20Jacksonville" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="LI-2">Done</button>
+  </div>
+</article>
+<article class="card" data-id="LI-3" data-lane="LI">
+  <div class="card-top"><span class="name">3. LinkedIn: PPEC director Jax</span><span class="tag tag-other">SEARCH</span></div>
+  <div class="actions">
+    <a class="open" href="https://www.linkedin.com/search/results/people/?keywords=PPEC%20director%20Jacksonville" target="_blank" rel="noopener">OPEN</a>
+    <button type="button" class="done" data-id="LI-3">Done</button>
+  </div>
+</article>
+</section>
+
+<p class="foot">Built 2026-09-22 ET · Michael Sheehan · 914-263-1311<br/>
+Nothing sends automatically. Done state stays on this phone (localStorage).<br/>
+Safari → Share → Add to Home Screen for one-tap access.</p>
+<button type="button" class="reset" id="resetDone">Reset Done marks (this lane)</button>
+</main>
+
+<script>
+const PASTE = {"FIRE": [{"id": "p-fire", "label": "Reply tips", "text": "Tap OPEN → mail app opens with subject + body ready. Red = money/owed. Nothing sends until you hit Send. Empty Booking-help: also check GoDaddy Conversations."}], "MONEY": [{"id": "p-money-senior", "label": "Senior / Regional ($150/mo or $185 qtr)", "text": "Hi — Michael Sheehan with Sheehan Homestead / Critters on Call. We do recurring animal therapy visits for senior communities across Jacksonville, plus mini petting zoos for one-off events. Recurring is $150/month or $185 quarterly; one-offs are typically $250–400. Would love to start a conversation with your activities / life enrichment team. Thanks!\n\n914-263-1311"}, {"id": "p-money-0", "label": "Violet / edu", "text": "Hi — Michael Sheehan with Sheehan Homestead / Critters on Call. We bring mobile petting zoos and farm field trips to Jax schools, academies, Montessori, and VPK. Field trips prefer $299 / $499 on-farm; mobile mini typically ~$380–400 (Violet partner ~50% off list or $2/person when fundraising). Happy to hold animals for your next festival or class visit.\n\n914-263-1311"}, {"id": "p-money-1", "label": "Enterprise / HOA", "text": "Hi — Michael Sheehan with Sheehan Homestead / Critters on Call. We run mobile petting zoos and animal experiences for HOA/CDD amenity events, corporate family days, and hospital foundation / community outreach. Typical one-off events $250–400 (larger festivals higher). Would love to explore a date with your events / amenity / foundation team.\n\n914-263-1311"}], "COLD": [{"id": "p-cold", "label": "Senior form paste ($150/mo or $185 qtr)", "text": "Hi — Michael Sheehan with Sheehan Homestead / Critters on Call. We do recurring animal therapy visits for senior communities across Jacksonville, plus mini petting zoos for one-off events. Recurring is $150/month or $185 quarterly; one-offs are typically $250–400. Would love to start a conversation with your activities / life enrichment team. Thanks!\n\n914-263-1311"}], "FB": [{"id": "p-fb", "label": "FB moms caption (POST only — never DM)", "text": "Hey locals — Sheehan Homestead / Critters on Call (Callahan). Mommy & Me on the farm is $25, or we bring a mini petting zoo to you. Easiest: sheehanhomestead.com — or text GOAT 914-263-1311 and I’ll send checkout."}], "LI": [{"id": "p-li", "label": "LinkedIn soft connect pitch", "text": "Hi — Michael Sheehan, Sheehan Homestead / Critters on Call (Callahan). We do recurring animal visits for senior / PPEC communities in Jax ($150/mo or $185 quarterly). If you ever book musicians, clowns, or juice pops for activities, we’re the animal version. Open to a quick intro?"}]};
+const LS_KEY = "coc_doomscroll_done_v1";
+const LS_LANE = "coc_doomscroll_lane_v1";
+
+function loadDone() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); }
+  catch(e) { return {}; }
+}
+function saveDone(map) {
+  localStorage.setItem(LS_KEY, JSON.stringify(map));
+}
+
+function copyText(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(text).catch(function() { return fallbackCopy(text); });
+  }
+  return Promise.resolve(fallbackCopy(text));
+}
+function fallbackCopy(text) {
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly","");
+  ta.style.position = "fixed";
+  ta.style.top = "0";
+  ta.style.left = "0";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  ta.setSelectionRange(0, ta.value.length);
+  var ok = false;
+  try { ok = document.execCommand("copy"); } catch(e) {}
+  document.body.removeChild(ta);
+  return ok;
+}
+
+function renderPaste(lane) {
+  var kit = document.getElementById("pasteKit");
+  var blocks = PASTE[lane] || [];
+  kit.innerHTML = blocks.map(function(b) {
+    return '<div class="paste-block">'
+      + '<div class="paste-head"><span>' + b.label.replace(/</g,"&lt;") + '</span>'
+      + '<button type="button" class="copy-btn" data-text-id="' + b.id + '">Copy</button></div>'
+      + '<pre class="paste-text" id="' + b.id + '">' + b.text.replace(/&/g,"&amp;").replace(/</g,"&lt;") + '</pre>'
+      + '</div>';
+  }).join("");
+  kit.querySelectorAll(".copy-btn").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      var el = document.getElementById(btn.getAttribute("data-text-id"));
+      var t = el ? el.textContent : "";
+      copyText(t).then(function() {
+        btn.classList.add("ok");
+        btn.textContent = "Copied";
+        setTimeout(function() { btn.classList.remove("ok"); btn.textContent = "Copy"; }, 1200);
+      });
+    });
+  });
+}
+
+function applyDoneState() {
+  var map = loadDone();
+  document.querySelectorAll(".card").forEach(function(card) {
+    var id = card.getAttribute("data-id");
+    if (map[id]) card.classList.add("done");
+    else card.classList.remove("done");
+  });
+  updateProgress();
+}
+
+function updateProgress() {
+  var lane = document.querySelector(".lane.active");
+  if (!lane) return;
+  var cards = lane.querySelectorAll(".card");
+  var left = 0;
+  cards.forEach(function(c) { if (!c.classList.contains("done")) left++; });
+  var name = lane.getAttribute("data-lane");
+  document.getElementById("progress").textContent = left + " left · " + name + " (" + cards.length + " total)";
+}
+
+function showLane(lane) {
+  document.querySelectorAll(".lane-btn").forEach(function(b) {
+    b.classList.toggle("active", b.getAttribute("data-lane") === lane);
+  });
+  document.querySelectorAll(".lane").forEach(function(s) {
+    s.classList.toggle("active", s.getAttribute("data-lane") === lane);
+  });
+  localStorage.setItem(LS_LANE, lane);
+  renderPaste(lane);
+  updateProgress();
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll(".lane-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() { showLane(btn.getAttribute("data-lane")); });
+});
+
+document.querySelectorAll(".done").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    var id = btn.getAttribute("data-id");
+    var map = loadDone();
+    if (map[id]) delete map[id];
+    else map[id] = 1;
+    saveDone(map);
+    applyDoneState();
+  });
+});
+
+document.getElementById("resetDone").addEventListener("click", function() {
+  var lane = document.querySelector(".lane.active");
+  if (!lane) return;
+  var map = loadDone();
+  lane.querySelectorAll(".card").forEach(function(c) {
+    delete map[c.getAttribute("data-id")];
+  });
+  saveDone(map);
+  applyDoneState();
+});
+
+var start = localStorage.getItem(LS_LANE) || "FIRE";
+applyDoneState();
+showLane(start);
+</script>
+</body>
+</html>
