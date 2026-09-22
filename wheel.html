@@ -4,10 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#c9a227" />
-<meta name="description" content="How Sweet It Is — Critters on Call prize wheel. Spin again, Gold Membership, or book a farm visit. Sheehan Homestead, Callahan FL." />
+<meta name="description" content="How Sweet It Is — Critters on Call prize wheel. Spin again, Gold Membership, farm & thrift gifts, farm tour, Gold Pro nomination. Sheehan Homestead, Callahan FL." />
 <meta name="robots" content="noindex, nofollow" />
 <meta property="og:title" content="How Sweet It Is · Prize Wheel" />
-<meta property="og:description" content="Spin the Critters on Call wheel — spinning again beats any prize. Gold Card · farm visit invite." />
+<meta property="og:description" content="Spin the Critters on Call wheel — first spin is a free spin. Gold · farm gift · thrift gift · tour · Gold Pro nomination." />
 <meta property="og:image" content="assets/pyrenees-logo.png" />
 <meta property="og:type" content="website" />
 <title>How Sweet It Is · Prize Wheel · Critters on Call</title>
@@ -45,6 +45,17 @@
       0 0 28px rgba(201,162,39,0.35),
       inset 0 0 0 2px rgba(0,0,0,0.35);
   }
+  .wheel-upsell {
+    border-radius: 0.85rem;
+    border: 1px dashed rgba(201,162,39,0.45);
+    background: rgba(201,162,39,0.08);
+    padding: 0.75rem 0.9rem;
+    text-align: center;
+  }
+  .wheel-upsell a {
+    color: var(--gold);
+    font-weight: 600;
+  }
 </style>
 </head>
 <body>
@@ -66,7 +77,7 @@
       <div style="text-align:center">
         <p class="tracker-kicker" style="margin:0">Prize wheel</p>
         <h1 class="wheel-page-tagline">How Sweet It Is</h1>
-        <p class="text-sm muted">Eight slices. Spin again is the best prize. Claim Gold or a farm visit in person.</p>
+        <p class="text-sm muted">Eight slices. First spin is always a free spin. Gold is the keepable prize.</p>
       </div>
 
       <div class="wheel-wrap">
@@ -83,9 +94,18 @@
       <div class="win-card" id="win-card" hidden>
         <p class="tracker-kicker">You landed</p>
         <h2 class="font-display" id="win-label" style="font-size:1.25rem;margin-top:0.35rem"></h2>
-        <p class="text-sm muted" id="win-value" style="margin-top:0.25rem"></p>
-        <a class="btn btn-outline btn-block" id="win-book" href="book.html" hidden style="margin-top:0.75rem">Book farm visit</a>
+        <p class="text-sm" id="win-value" style="margin-top:0.25rem;color:var(--gold);font-weight:600"></p>
+        <p class="text-sm muted" id="win-note" style="margin-top:0.45rem;line-height:1.45" hidden></p>
+        <a class="btn btn-outline btn-block" id="win-book" href="book.html" hidden style="margin-top:0.75rem">Book farm tour</a>
         <a class="btn btn-primary btn-block" id="win-gold" href="gold.html" hidden style="margin-top:0.5rem">Claim Gold Card</a>
+      </div>
+
+      <div class="wheel-upsell">
+        <p class="text-xs" style="margin:0;line-height:1.45">
+          Want a free farm visit? Screenshot this win, leave a review on a
+          <a href="https://onchainoffgrid-hub.github.io/critters-play/" target="_blank" rel="noopener">Critters game</a>,
+          and bring a signed waiver.
+        </p>
       </div>
 
       <ul class="prize-list" id="prize-list"></ul>
@@ -93,11 +113,12 @@
       <div class="wheel-page-links">
         <a href="gold.html">Gold</a>
         <a href="book.html">Book</a>
+        <a href="https://onchainoffgrid-hub.github.io/critters-play/">Games</a>
         <a href="index.html">Home</a>
       </div>
 
       <p class="text-xs muted" style="text-align:center">
-        Gold Card is free if you’ve ever spent $1 with us · $50 MSRP · claim via Gold.
+        Gold Card MSRP $50 · includes farm / thrift / tour gift-stack narrative · claim via Gold.
       </p>
     </div>
   </main>

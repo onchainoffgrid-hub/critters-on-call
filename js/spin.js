@@ -7,12 +7,19 @@
   var spinning = false;
   var reduceMotion = false;
   var pending = null;
+  var SPUN_KEY = "coc_wheel_spun";
+  var AGAIN_LINES = [
+    "Isn't spinning again the best?",
+    "Spinning again is priceless — don't ever forget that.",
+    "Free spin. How sweet it is."
+  ];
 
   var wheel = document.getElementById("prize-wheel");
   var spinBtn = document.getElementById("spin-btn");
   var winCard = document.getElementById("win-card");
   var winLabel = document.getElementById("win-label");
   var winValue = document.getElementById("win-value");
+  var winNote = document.getElementById("win-note");
   var winBook = document.getElementById("win-book");
   var winGold = document.getElementById("win-gold");
   var prizeList = document.getElementById("prize-list");
@@ -21,6 +28,25 @@
     reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   } catch (e) {}
 
+  function hasSpunBefore() {
+    try {
+      return localStorage.getItem(SPUN_KEY) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function markSpun() {
+    try {
+      localStorage.setItem(SPUN_KEY, "1");
+    } catch (e) {}
+  }
+
+  function labelMarkup(p) {
+    if (p.again) return p.short;
+    return p.short + "<br>" + p.value;
+  }
+
   prizes.forEach(function (p, i) {
     var deg = i * slice + slice / 2;
     var flip = deg > 90 && deg < 270;
@@ -28,7 +54,7 @@
     var el = document.createElement("span");
     el.className = "wheel-label " + (light ? "is-light" : "is-dark");
     el.style.transform = "rotate(" + deg + "deg)";
-    el.innerHTML = '<span' + (flip ? ' style="transform:rotate(180deg)"' : "") + ">" + p.short + "</span>";
+    el.innerHTML = '<span' + (flip ? ' style="transform:rotate(180deg)"' : "") + ">" + labelMarkup(p) + "</span>";
     wheel.appendChild(el);
 
     if (prizeList) {
@@ -39,19 +65,18 @@
     }
   });
 
-  function weightOf(p) {
-    return p.weight != null ? Number(p.weight) : 1;
-  }
-
-  function weightedIndex() {
-    var total = 0;
-    for (var i = 0; i < prizes.length; i++) total += weightOf(prizes[i]);
-    var r = Math.random() * total;
-    for (var j = 0; j < prizes.length; j++) {
-      r -= weightOf(prizes[j]);
-      if (r <= 0) return j;
+  /* First spin ever → always an again slice; after that, fair among all 8 */
+  function pickIndex() {
+    if (!hasSpunBefore()) {
+      var againIdx = [];
+      for (var i = 0; i < prizes.length; i++) {
+        if (prizes[i].again) againIdx.push(i);
+      }
+      if (againIdx.length) {
+        return againIdx[Math.floor(Math.random() * againIdx.length)];
+      }
     }
-    return prizes.length - 1;
+    return Math.floor(Math.random() * prizes.length);
   }
 
   function targetRotation(index, current) {
@@ -62,34 +87,78 @@
     return current + 360 * spins + needed;
   }
 
+  function setNote(text) {
+    if (!winNote) return;
+    if (text) {
+      winNote.hidden = false;
+      winNote.textContent = text;
+    } else {
+      winNote.hidden = true;
+      winNote.textContent = "";
+    }
+  }
+
   function finish() {
     spinning = false;
     wheel.classList.remove("is-spinning");
     spinBtn.disabled = false;
     if (!pending) return;
+    markSpun();
     winCard.hidden = false;
+
     if (pending.again) {
+      var line = AGAIN_LINES[Math.floor(Math.random() * AGAIN_LINES.length)];
       winLabel.textContent = "How sweet it is";
-      winValue.textContent = "Spinning again beats any prize.";
+      winValue.textContent = "Priceless";
+      setNote(line);
       spinBtn.textContent = "Spin again";
-      C.toast("How sweet it is — spinning again beats any prize.");
+      C.toast(line);
     } else {
       winLabel.textContent = pending.label;
       winValue.textContent = pending.value;
       spinBtn.textContent = "Spin";
       C.toast(pending.label + " · " + pending.value);
     }
+
     if (winBook) {
       if (pending.book) {
         winBook.hidden = false;
         winBook.href = "book.html?service=" + encodeURIComponent(pending.book);
+        winBook.textContent = "Book farm tour";
       } else {
         winBook.hidden = true;
       }
     }
+
     if (winGold) {
-      winGold.hidden = !(pending.id && String(pending.id).indexOf("gold") === 0);
+      if (pending.claim === "gold") {
+        winGold.hidden = false;
+        winGold.href = "gold.html";
+        winGold.textContent = "Claim Gold Card";
+        setNote("Gold includes the gift stack — farm gift, thrift-style value, and tour value. The common keepable prize.");
+      } else if (pending.claim === "pro") {
+        winGold.hidden = false;
+        winGold.href = "gold.html";
+        winGold.textContent = "Tell us who to nominate";
+        setNote("Nominate a programmer or org for Gold Pro. Open Gold and tell us who.");
+      } else {
+        winGold.hidden = true;
+        if (!pending.again) {
+          if (pending.book) {
+            setNote("Claim in person at Sheehan Homestead — or book your tour below.");
+          } else {
+            setNote("Claim in person at Sheehan Homestead.");
+          }
+        }
+      }
+    } else if (!pending.again) {
+      if (pending.book) {
+        setNote("Claim in person at Sheehan Homestead — or book your tour below.");
+      } else if (!pending.claim) {
+        setNote("Claim in person at Sheehan Homestead.");
+      }
     }
+
     if (prizeList) {
       Array.prototype.forEach.call(prizeList.children, function (li) {
         li.classList.toggle("is-won", li.dataset.id === pending.id);
@@ -103,7 +172,7 @@
 
   spinBtn.addEventListener("click", function () {
     if (spinning) return;
-    var index = weightedIndex();
+    var index = pickIndex();
     pending = prizes[index];
     winCard.hidden = true;
     spinning = true;

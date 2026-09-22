@@ -600,18 +600,18 @@ p { margin: 0; }
   position: absolute;
   inset: 0;
   text-align: center;
-  font-size: 0.65rem;
+  font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   pointer-events: none;
 }
 .wheel-label span {
   position: absolute;
   left: 50%;
-  top: 0.7rem;
-  width: 4.1rem;
+  top: 0.55rem;
+  width: 4.4rem;
   transform: translateX(-50%);
-  line-height: 1.15;
+  line-height: 1.12;
 }
 .wheel-label.is-light { color: var(--primary-fg); }
 .wheel-label.is-dark { color: var(--accent); }

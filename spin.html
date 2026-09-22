@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#c9a227" />
-<meta name="description" content="How Sweet It Is — prize wheel. Spin again, Gold Membership, farm visit invite. Claim in person at Sheehan Homestead." />
+<meta name="description" content="How Sweet It Is — prize wheel. Spin again, Gold Membership, farm & thrift gifts, farm tour, Gold Pro nomination. Claim in person at Sheehan Homestead." />
 <meta name="robots" content="noindex, nofollow" />
 <title>How Sweet It Is · Spin · Critters on Call</title>
 <link rel="icon" type="image/png" href="assets/pyrenees-logo.png" />
@@ -12,6 +12,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/styles.css" />
+<style>
+  .wheel-upsell {
+    border-radius: 0.85rem;
+    border: 1px dashed rgba(201,162,39,0.45);
+    background: rgba(201,162,39,0.08);
+    padding: 0.75rem 0.9rem;
+    text-align: center;
+  }
+  .wheel-upsell a {
+    color: var(--gold);
+    font-weight: 600;
+  }
+</style>
 </head>
 <body>
 <div class="app">
@@ -31,7 +44,7 @@
     <div class="stack" style="gap:1.25rem">
       <div>
         <h1 style="font-size:1.5rem">How Sweet It Is</h1>
-        <p class="text-sm muted" style="margin-top:0.25rem">Eight slices. Spinning again beats any prize. Gold Card or book a farm visit — claim in person.</p>
+        <p class="text-sm muted" style="margin-top:0.25rem">Eight slices. First spin is always a free spin. Gold is the keepable prize — claim gifts and tours in person.</p>
         <p class="text-xs muted" style="margin-top:0.35rem"><a href="wheel.html" style="color:var(--gold);font-weight:600">Open standalone wheel →</a></p>
       </div>
 
@@ -49,9 +62,18 @@
       <div class="win-card" id="win-card" hidden>
         <p class="tracker-kicker">You won</p>
         <h2 class="font-display" id="win-label" style="font-size:1.25rem;margin-top:0.35rem"></h2>
-        <p class="text-sm muted" id="win-value" style="margin-top:0.25rem"></p>
-        <a class="btn btn-outline btn-block" id="win-book" href="book.html" hidden style="margin-top:0.75rem">Book farm visit</a>
+        <p class="text-sm" id="win-value" style="margin-top:0.25rem;color:var(--gold);font-weight:600"></p>
+        <p class="text-sm muted" id="win-note" style="margin-top:0.45rem;line-height:1.45" hidden></p>
+        <a class="btn btn-outline btn-block" id="win-book" href="book.html" hidden style="margin-top:0.75rem">Book farm tour</a>
         <a class="btn btn-primary btn-block" id="win-gold" href="gold.html" hidden style="margin-top:0.5rem">Claim Gold Card</a>
+      </div>
+
+      <div class="wheel-upsell">
+        <p class="text-xs" style="margin:0;line-height:1.45">
+          Want a free farm visit? Screenshot this win, leave a review on a
+          <a href="https://onchainoffgrid-hub.github.io/critters-play/" target="_blank" rel="noopener">Critters game</a>,
+          and bring a signed waiver.
+        </p>
       </div>
 
       <ul class="prize-list" id="prize-list"></ul>

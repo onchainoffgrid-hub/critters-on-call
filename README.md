@@ -18,4 +18,7 @@ http://localhost:8766/
 - **Wheel:** https://onchainoffgrid-hub.github.io/critters-on-call/wheel.html
 - **Gold:** https://onchainoffgrid-hub.github.io/critters-on-call/gold.html
 
-Prize wheel (“How Sweet It Is”): most landings are spin-again; Gold Membership and a soft farm-visit invite fill the rest. Claim in person.
+## Prize wheel (“How Sweet It Is”)
+Eight slices: spin-again (Priceless) ×2 · Gold Membership ($50) ×2 · free farm gift ($25) · free thrift gift ($25) · free farm tour ($25) · Gold Pro nomination ($299).
+
+First spin in a browser always lands on spin-again. After that, fair random among all eight. Claim gifts/tours in person; Gold / Gold Pro via `gold.html`. Soft upsell: screenshot + Critters game review + signed waiver for a free farm visit.

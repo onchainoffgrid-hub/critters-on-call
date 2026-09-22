@@ -66,17 +66,17 @@
     }
   ];
 
+  /* How Sweet It Is — exactly 8 visual slices */
   var PRIZES = [
-    { id: "sweet-1", label: "How Sweet It Is — Spin again", short: "SWEET", value: "Spin again", again: true, weight: 16 },
-    { id: "gold-1", label: "Gold Membership", short: "GOLD", value: "Free Gold Card · $50 MSRP", weight: 10 },
-    { id: "sweet-2", label: "How Sweet It Is — Spin again", short: "AGAIN", value: "Spin again", again: true, weight: 16 },
-    { id: "gold-2", label: "Gold Membership", short: "GOLD", value: "Free Gold Card · $50 MSRP", weight: 10 },
-    { id: "sweet-3", label: "How Sweet It Is — Spin again", short: "SWEET", value: "Spin again", again: true, weight: 16 },
-    { id: "gold-3", label: "Gold Membership", short: "GOLD", value: "Free Gold Card · $50 MSRP", weight: 10 },
-    { id: "sweet-4", label: "How Sweet It Is — Spin again", short: "AGAIN", value: "Spin again", again: true, weight: 16 },
-    { id: "farm-soft", label: "Book a farm visit", short: "VISIT", value: "Claim in person", book: "farm-visit", weight: 6 }
+    { id: "again-1", label: "How Sweet It Is — Spin again", short: "SWEET", value: "Priceless", again: true },
+    { id: "gold", label: "Gold Membership", short: "GOLD", value: "$50", claim: "gold" },
+    { id: "farm-gift", label: "Free farm gift", short: "FARM", value: "$25" },
+    { id: "thrift-gift", label: "Free thrift gift", short: "THRIFT", value: "$25" },
+    { id: "farm-tour", label: "Free farm tour", short: "TOUR", value: "$25", book: "farm-visit" },
+    { id: "gold-2", label: "Gold Membership", short: "GOLD", value: "$50", claim: "gold" },
+    { id: "again-2", label: "How Sweet It Is — Spin again", short: "AGAIN", value: "Priceless", again: true },
+    { id: "gold-pro", label: "Gold Pro nomination", short: "PRO", value: "$299", claim: "pro" }
   ];
-  /* Weights total 100 → spin-again ~64%, gold 30%, farm visit 6% */
 
   function money(n) {
     return "$" + Number(n).toLocaleString("en-US");
