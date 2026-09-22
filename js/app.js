@@ -67,15 +67,16 @@
   ];
 
   var PRIZES = [
-    { id: "again", label: "Spin again", short: "AGAIN", value: "Priceless", again: true },
-    { id: "gold-family", label: "Free Gold Card Family", short: "GOLD FAM", value: "$49.99" },
-    { id: "gold-pro", label: "Free Gold Card Pro", short: "GOLD PRO", value: "$299" },
-    { id: "farm-gift", label: "Free farm gift", short: "FARM", value: "$25" },
-    { id: "thrift-gift", label: "Free thrift gift", short: "THRIFT", value: "$50" },
-    { id: "two-seat", label: "Free 2-person ticket", short: "2-SEAT", value: "$25", book: "farm-visit" },
-    { id: "whole-car", label: "Free whole-car ticket", short: "CAR", value: "$50", book: "farm-visit" },
-    { id: "homeschool", label: "Free homeschool class", short: "CLASS", value: "$40", book: "homeschool" }
+    { id: "sweet-1", label: "How Sweet It Is — Spin again", short: "SWEET", value: "Spin again", again: true, weight: 16 },
+    { id: "gold-1", label: "Gold Membership", short: "GOLD", value: "Free Gold Card · $50 MSRP", weight: 10 },
+    { id: "sweet-2", label: "How Sweet It Is — Spin again", short: "AGAIN", value: "Spin again", again: true, weight: 16 },
+    { id: "gold-2", label: "Gold Membership", short: "GOLD", value: "Free Gold Card · $50 MSRP", weight: 10 },
+    { id: "sweet-3", label: "How Sweet It Is — Spin again", short: "SWEET", value: "Spin again", again: true, weight: 16 },
+    { id: "gold-3", label: "Gold Membership", short: "GOLD", value: "Free Gold Card · $50 MSRP", weight: 10 },
+    { id: "sweet-4", label: "How Sweet It Is — Spin again", short: "AGAIN", value: "Spin again", again: true, weight: 16 },
+    { id: "farm-soft", label: "Book a farm visit", short: "VISIT", value: "Claim in person", book: "farm-visit", weight: 6 }
   ];
+  /* Weights total 100 → spin-again ~64%, gold 30%, farm visit 6% */
 
   function money(n) {
     return "$" + Number(n).toLocaleString("en-US");
