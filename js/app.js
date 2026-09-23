@@ -12,70 +12,98 @@
     { id: "complete", label: "Complete", detail: "Pack-up done · see you next time", tag: "All done" }
   ];
 
+  /* Money SKUs — mirrored from pricing.html / homestead sellables (site JS-heavy). */
   var SERVICES = [
     {
-      id: "mobile",
-      name: "Mobile Petting Zoo",
-      blurb: "We come to you. Tax and travel not included.",
-      category: "Mobile",
-      trackable: true,
-      priceMin: 225,
-      priceMax: 499,
-      offers: [
-        { id: "90", label: "90 min", durationMin: 90, price: 499, note: "At least 9 animals — goats, bunnies, and specialty fowl. Helper included." },
-        { id: "75", label: "75 min", durationMin: 75, price: 325, note: "At least 5 animals delivered to your door." },
-        { id: "60", label: "60 min", durationMin: 60, price: 225, note: "At least 3 bunnies. Smaller events and baby birthdays." }
-      ]
-    },
-    {
       id: "farm-visit",
-      name: "Farm Visit",
-      blurb: "Come to Sheehan Homestead in Callahan. Check-in, a short program, then the herd.",
+      name: "Farm Visit (come here)",
+      blurb: "Sheehan Homestead · Callahan. Cheapest cash path on the board.",
       category: "On-farm",
       trackable: false,
       priceMin: 25,
       priceMax: 50,
       offers: [
-        { id: "two", label: "2 people", durationMin: 60, price: 25, note: "60 min · 2-person ticket." },
-        { id: "car", label: "Whole car", durationMin: 60, price: 50, note: "60 min · one car of visitors." }
+        { id: "two", label: "2-person ticket", durationMin: 60, price: 25, note: "60 min · 2 people. Poker-chip wheel prize lands here." },
+        { id: "car", label: "Whole car", durationMin: 60, price: 50, note: "60 min · up to 5 guests in one car." }
       ]
     },
     {
-      id: "homeschool",
-      name: "Homeschool",
-      blurb: "Farm & STEM on the homestead. First Tuesday, second Wednesday, third Monday.",
-      category: "Class",
+      id: "gold-club",
+      name: "Gold / Critter Club",
+      blurb: "Membership that discounts services and travel.",
+      category: "Membership",
       trackable: false,
-      priceMin: 40,
-      priceMax: 40,
+      priceMin: 50,
+      priceMax: 50,
       offers: [
-        { id: "class", label: "90 min class", durationMin: 90, price: 40, note: "Composting, gardening, building, animal care. $40 per learner." }
+        { id: "gold", label: "Gold card", durationMin: 0, price: 50, note: "25% off services · 50% off travel · free 2-person farm + $25 gift · deposit toward mobile." }
+      ]
+    },
+    {
+      id: "field",
+      name: "Field / group on farm",
+      blurb: "Bigger groups on the homestead.",
+      category: "On-farm",
+      trackable: false,
+      priceMin: 299,
+      priceMax: 499,
+      offers: [
+        { id: "small", label: "Small group", durationMin: 75, price: 299, note: "≤5 cars or ≤20 people · ~75 min." },
+        { id: "large", label: "Large group", durationMin: 90, price: 499, note: "≤10 cars or ≤40 people · ~90 min." }
       ]
     },
     {
       id: "mommy-me",
       name: "Mommy & Me",
-      blurb: "Visit us. Parent and little one, one hour with the herd.",
-      category: "Visit us",
+      blurb: "Parent + little one with the herd.",
+      category: "Class",
       trackable: false,
       priceMin: 25,
       priceMax: 25,
       offers: [
-        { id: "visit", label: "60 min", durationMin: 60, price: 25, note: "On the farm in Callahan. Parent + little one." }
+        { id: "visit", label: "Per hour", durationMin: 60, price: 25, note: "On the farm in Callahan." }
+      ]
+    },
+    {
+      id: "homeschool",
+      name: "Homeschool",
+      blurb: "Scheduled STEM / farm class.",
+      category: "Class",
+      trackable: false,
+      priceMin: 40,
+      priceMax: 40,
+      offers: [
+        { id: "class", label: "90 min class", durationMin: 90, price: 40, note: "$40 per learner · composting, gardening, building, animal care." }
+      ]
+    },
+    {
+      id: "mobile",
+      name: "Mobile Petting Zoo",
+      blurb: "We come to you. Weekday / weekend. Tax and travel not included.",
+      category: "Mobile",
+      trackable: true,
+      priceMin: 150,
+      priceMax: 699,
+      offers: [
+        { id: "bunny", label: "Bunny Haven", durationMin: 60, price: 150, note: "60 min · bunnies, goats & friends. Weekend $235." },
+        { id: "mini", label: "Mini", durationMin: 75, price: 299, note: "75 min · ≥6 animals. Weekend $359." },
+        { id: "standard", label: "Standard", durationMin: 90, price: 359, note: "90 min · full backyard. Weekend $549." },
+        { id: "standard-full", label: "Standard + Full Side", durationMin: 90, price: 499, note: "Extra critters. Weekend $699." },
+        { id: "fullside", label: "Full Side add-on", durationMin: 0, price: 150, note: "Add more animals to Standard." }
       ]
     }
   ];
 
-  /* How Sweet It Is — exactly 8 visual slices */
+  /* How Sweet It Is — 8 slices. Opposites: farm↔thrift ($10/$25), poker chip↔Golden Goatee, free spin↔early access. */
   var PRIZES = [
-    { id: "again-1", label: "How Sweet It Is — Spin again", short: "SWEET", value: "Priceless", again: true },
-    { id: "gold", label: "Gold Membership", short: "GOLD", value: "$50", claim: "gold" },
-    { id: "farm-gift", label: "Free farm gift", short: "FARM", value: "$25" },
-    { id: "thrift-gift", label: "Free thrift gift", short: "THRIFT", value: "$25" },
-    { id: "farm-tour", label: "Free farm tour", short: "TOUR", value: "$25", book: "farm-visit" },
-    { id: "gold-2", label: "Gold Membership", short: "GOLD", value: "$50", claim: "gold" },
-    { id: "again-2", label: "How Sweet It Is — Spin again", short: "AGAIN", value: "Priceless", again: true },
-    { id: "gold-pro", label: "Gold Pro nomination", short: "PRO", value: "$299", claim: "pro" }
+    { id: "free-spin", label: "Free spin", short: "SPIN", value: "Priceless", again: true },
+    { id: "farm-10", label: "Free $10 farm gift", short: "$10 FARM", value: "$10" },
+    { id: "farm-25", label: "Free $25 farm gift", short: "$25 FARM", value: "$25" },
+    { id: "poker", label: "Free poker chip", short: "CHIP", value: "2-person ticket", book: "farm-visit" },
+    { id: "early", label: "Early access · try the app", short: "APP", value: "Early promos", claim: "app" },
+    { id: "thrift-10", label: "Free $10 thrift gift", short: "$10 THRIFT", value: "$10" },
+    { id: "thrift-25", label: "Free $25 thrift gift", short: "$25 THRIFT", value: "$25" },
+    { id: "goatee", label: "Golden Goatee", short: "GOATEE", value: "Gold + ticket + $25", claim: "goatee", book: "farm-visit" }
   ];
 
   function money(n) {

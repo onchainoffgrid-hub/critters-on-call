@@ -124,18 +124,30 @@
       if (pending.book) {
         winBook.hidden = false;
         winBook.href = "book.html?service=" + encodeURIComponent(pending.book);
-        winBook.textContent = "Book farm tour";
+        if (pending.id === "poker") winBook.textContent = "Claim 2-person ticket";
+        else if (pending.id === "goatee") winBook.textContent = "Book farm visit (in stack)";
+        else winBook.textContent = "Book farm tour";
       } else {
         winBook.hidden = true;
       }
     }
 
     if (winGold) {
-      if (pending.claim === "gold") {
+      if (pending.claim === "goatee") {
+        winGold.hidden = false;
+        winGold.href = "gold.html";
+        winGold.textContent = "Claim Golden Goatee";
+        setNote("Golden Goatee = Gold membership + free 2-person ticket + free $25 farm tour/gift. Claim the stack in person.");
+      } else if (pending.claim === "gold") {
         winGold.hidden = false;
         winGold.href = "gold.html";
         winGold.textContent = "Claim Gold Card";
-        setNote("Gold includes the gift stack — farm gift, thrift-style value, and tour value. The common keepable prize.");
+        setNote("Gold membership — claim in person at Sheehan Homestead.");
+      } else if (pending.claim === "app") {
+        winGold.hidden = false;
+        winGold.href = "index.html";
+        winGold.textContent = "Open the app";
+        setNote("Early access / early promos — try Book, Track, Games. No review homework to claim this slice.");
       } else if (pending.claim === "pro") {
         winGold.hidden = false;
         winGold.href = "gold.html";
@@ -144,7 +156,9 @@
       } else {
         winGold.hidden = true;
         if (!pending.again) {
-          if (pending.book) {
+          if (pending.id === "poker") {
+            setNote("Poker chip = free 2-person farm ticket. Claim in person or book below.");
+          } else if (pending.book) {
             setNote("Claim in person at Sheehan Homestead — or book your tour below.");
           } else {
             setNote("Claim in person at Sheehan Homestead.");
