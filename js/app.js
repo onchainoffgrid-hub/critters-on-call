@@ -94,16 +94,17 @@
     }
   ];
 
-  /* How Sweet It Is — 8 slices. Opposites: farm↔thrift ($10/$25), poker chip↔Golden Goatee, free spin↔early access. */
+  /* How Sweet It Is — 8 soft digital slices (Phase 1). Align with play aptitude prizes + parent favor / visit farm.
+     Honest soft labels · honor-system · no fake paid coupon codes. Win CTA → sheehanhomestead.com/services */
   var PRIZES = [
     { id: "free-spin", label: "Free spin", short: "SPIN", value: "Priceless", again: true },
-    { id: "farm-10", label: "Free $10 farm gift", short: "$10 FARM", value: "$10" },
-    { id: "farm-25", label: "Free $25 farm gift", short: "$25 FARM", value: "$25" },
-    { id: "poker", label: "Free poker chip", short: "CHIP", value: "2-person ticket", book: "farm-visit" },
-    { id: "early", label: "Early access · try the app", short: "APP", value: "Early promos", claim: "app" },
-    { id: "thrift-10", label: "Free $10 thrift gift", short: "$10 THRIFT", value: "$10" },
-    { id: "thrift-25", label: "Free $25 thrift gift", short: "$25 THRIFT", value: "$25" },
-    { id: "goatee", label: "Golden Goatee", short: "GOATEE", value: "Gold + ticket + $25", claim: "goatee", book: "farm-visit" }
+    { id: "farm-favor", label: "Farm Favor tip", short: "FAVOR", value: "Sophie · parent tip", claim: "services", theme: "sophie" },
+    { id: "scout-badge", label: "Mobile party scout badge", short: "SCOUT", value: "Gus · mobile zoo", claim: "services", theme: "gus" },
+    { id: "visit-pass", label: "Barn Queen visit pass", short: "VISIT", value: "Betty · Visit Us", claim: "services", theme: "betty" },
+    { id: "stem-spark", label: "Grain Guard STEM spark", short: "STEM", value: "Elon · learn on farm", claim: "services", theme: "elon" },
+    { id: "parent-favor", label: "Parent favor unlocked", short: "PARENT", value: "Wholesome tip", claim: "services" },
+    { id: "farm-invite", label: "Visit the farm invite", short: "FARM", value: "Experiences · Services", claim: "services" },
+    { id: "sweet-again", label: "How sweet it is", short: "SWEET", value: "Spin again", again: true }
   ];
 
   function money(n) {

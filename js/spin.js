@@ -15,8 +15,8 @@
     "Spinning again is priceless — don't ever forget that.",
     "Free spin. How sweet it is."
   ];
+  var SERVICES_URL = "https://www.sheehanhomestead.com/services";
   var BOOK_HELP = "https://www.sheehanhomestead.com/booking-help";
-  var BOOK_MOBILE = "https://onchainoffgrid-hub.github.io/critters-on-call/book.html?service=mobile";
   var FB_URL = "https://www.facebook.com/profile.php?id=61556795506312";
   var SMS_HIGH_SCORE = "sms:9142631311?&body=" + encodeURIComponent("HIGH SCORE");
   var CAPS_KEY = "coc_play_caps_v1";
@@ -28,6 +28,8 @@
   var winLabel = document.getElementById("win-label");
   var winValue = document.getElementById("win-value");
   var winNote = document.getElementById("win-note");
+  var winServices = document.getElementById("win-services");
+  var winSms = document.getElementById("win-sms");
   var winBook = document.getElementById("win-book");
   var winGold = document.getElementById("win-gold");
   var prizeList = document.getElementById("prize-list");
@@ -168,7 +170,7 @@
       activeEarn = null;
       earnBanner.hidden = false;
       earnBanner.textContent =
-        "Play reward from " + dogDisplayName(earn.dog) + " waiting — daily spin claim used. Text HIGH SCORE to 914-263-1311, or come back tomorrow.";
+        "Play reward from " + dogDisplayName(earn.dog) + " waiting — daily spin claim used. See our services, text HIGH SCORE, or come back tomorrow.";
       if (spinBtn && !spinning) {
         spinBtn.disabled = true;
         spinBtn.textContent = "Come back tomorrow";
@@ -179,7 +181,7 @@
     }
     earnBanner.hidden = false;
     earnBanner.textContent =
-      "Play reward: one free spin from " + dogDisplayName(earn.dog) + " — claim once (1/day). Prizes TBD.";
+      "Play reward: one free spin from " + dogDisplayName(earn.dog) + " — claim once (1/day, honor-system). Soft digital prizes.";
     if (spinBtn && !spinning && !lastSpinWasEarn) {
       spinBtn.disabled = false;
       spinBtn.textContent = "Claim free spin";
@@ -299,7 +301,7 @@
     }
 
     winCard.hidden = false;
-    /* Three doors = earned buzz path; free-spin path keeps existing book/gold CTAs */
+    /* Earned play path also surfaces message doors; all wins push Services first */
     showMessageDoors(!!wasEarn);
 
     if (pending.again) {
@@ -307,8 +309,8 @@
       winLabel.textContent = "How sweet it is";
       winValue.textContent = "Priceless";
       if (wasEarn) {
-        setNote("Spin claimed — text HIGH SCORE to 914-263-1311 (prizes TBD). No free re-spin today.");
-        C.toast("Spin claimed · pick a door");
+        setNote("Spin claimed — soft digital win. See our services, then text HIGH SCORE. No free re-spin today.");
+        C.toast("Spin claimed · See our services");
       } else {
         setNote(line);
         spinBtn.textContent = "Spin again";
@@ -321,62 +323,44 @@
       C.toast(pending.label + " · " + pending.value);
     }
 
+    /* Primary CTA always: See our services (real website) */
+    if (winServices) {
+      winServices.hidden = false;
+      winServices.href = SERVICES_URL;
+      winServices.textContent = "See our services";
+      winServices.target = "_blank";
+      winServices.rel = "noopener";
+    }
+    if (winSms) {
+      winSms.hidden = false;
+      winSms.href = SMS_HIGH_SCORE;
+      winSms.textContent = "Text HIGH SCORE to 914-263-1311";
+    }
+
+    /* Optional tertiary — booking help for visit-themed slices; hide Gold for soft path */
     if (winBook) {
-      if (pending.book && !wasEarn) {
+      if (!pending.again && (pending.theme === "betty" || pending.id === "farm-invite" || pending.claim === "services")) {
         winBook.hidden = false;
-        winBook.href = "book.html?service=" + encodeURIComponent(pending.book);
-        if (pending.id === "poker") winBook.textContent = "Claim 2-person ticket";
-        else if (pending.id === "goatee") winBook.textContent = "Book farm visit (in stack)";
-        else winBook.textContent = "Book farm tour";
+        winBook.href = BOOK_HELP;
+        winBook.textContent = "Booking help (optional)";
+        winBook.target = "_blank";
+        winBook.rel = "noopener";
       } else {
-        /* Earned path uses the three doors instead */
         winBook.hidden = true;
       }
     }
-
     if (winGold) {
-      if (wasEarn) {
-        winGold.hidden = true;
-        if (!pending.again) {
-          setNote("Nice land! Prizes TBD — text HIGH SCORE to 914-263-1311 with a screenshot, or tap a door below.");
-        }
-      } else if (pending.claim === "goatee") {
-        winGold.hidden = false;
-        winGold.href = "gold.html";
-        winGold.textContent = "Claim Golden Goatee";
-        setNote("Golden Goatee = Gold membership + free 2-person ticket + free $25 farm tour/gift. Claim the stack in person.");
-      } else if (pending.claim === "gold") {
-        winGold.hidden = false;
-        winGold.href = "gold.html";
-        winGold.textContent = "Claim Gold Card";
-        setNote("Gold membership — claim in person at Sheehan Homestead.");
-      } else if (pending.claim === "app") {
-        winGold.hidden = false;
-        winGold.href = "index.html";
-        winGold.textContent = "Open the app";
-        setNote("Early access / early promos — try Book, Track, Games. No review homework to claim this slice.");
-      } else if (pending.claim === "pro") {
-        winGold.hidden = false;
-        winGold.href = "gold.html";
-        winGold.textContent = "Tell us who to nominate";
-        setNote("Nominate a programmer or org for Gold Pro. Open Gold and tell us who.");
-      } else {
-        winGold.hidden = true;
-        if (!pending.again) {
-          if (pending.id === "poker") {
-            setNote("Poker chip = free 2-person farm ticket. Claim in person or book below.");
-          } else if (pending.book) {
-            setNote("Claim in person at Sheehan Homestead — or book your tour below.");
-          } else {
-            setNote("Claim in person at Sheehan Homestead.");
-          }
-        }
-      }
-    } else if (!pending.again && !wasEarn) {
-      if (pending.book) {
-        setNote("Claim in person at Sheehan Homestead — or book your tour below.");
-      } else if (!pending.claim) {
-        setNote("Claim in person at Sheehan Homestead.");
+      winGold.hidden = true;
+    }
+
+    if (!pending.again) {
+      if (pending.claim === "services" || pending.theme) {
+        setNote(
+          "Soft digital prize · limited · honor-system. Entertaining + learn a little — parents, See our services on the real website."
+          + (wasEarn ? " Or tap a door below." : "")
+        );
+      } else if (wasEarn) {
+        setNote("Nice land! Soft prize — See our services, or text HIGH SCORE with a screenshot.");
       }
     }
 
@@ -424,12 +408,12 @@
   });
 
   /* Wire door hrefs if present */
+  var doorServices = document.getElementById("door-services");
   var doorBook = document.getElementById("door-book");
-  var doorBookAlt = document.getElementById("door-book-alt");
   var doorSms = document.getElementById("door-sms");
   var doorFb = document.getElementById("door-fb");
+  if (doorServices) doorServices.href = SERVICES_URL;
   if (doorBook) doorBook.href = BOOK_HELP;
-  if (doorBookAlt) doorBookAlt.href = BOOK_MOBILE;
   if (doorSms) doorSms.href = SMS_HIGH_SCORE;
   if (doorFb) doorFb.href = FB_URL;
 

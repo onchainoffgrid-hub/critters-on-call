@@ -4,10 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#c9a227" />
-<meta name="description" content="How Sweet It Is — Critters on Call prize wheel. Free spin, farm & thrift gifts opposite each other, poker chip, Golden Goatee, early app access. Sheehan Homestead, Callahan FL." />
+<meta name="description" content="How Sweet It Is — Critters on Call prize wheel. Soft digital prizes aligned with Sophie, Gus, Betty & Evade Elon — then See our services. Sheehan Homestead, Callahan FL." />
 <meta name="robots" content="noindex, nofollow" />
 <meta property="og:title" content="How Sweet It Is · Prize Wheel" />
-<meta property="og:description" content="Spin the Critters on Call wheel — first spin is a free spin. Free spin · $10/$25 farm & thrift · poker chip · Golden Goatee · early app access." />
+<meta property="og:description" content="Spin the Critters on Call wheel — soft Farm Favor, scout badge, visit pass, STEM spark. Limited · honor-system. See our services." />
 <meta property="og:image" content="assets/pyrenees-logo.png" />
 <meta property="og:type" content="website" />
 <title>How Sweet It Is · Prize Wheel · Critters on Call</title>
@@ -141,7 +141,7 @@
       <div style="text-align:center">
         <p class="tracker-kicker" style="margin:0">Prize wheel</p>
         <h1 class="wheel-page-tagline">How Sweet It Is</h1>
-        <p class="text-sm muted">Eight slices. Farm gifts sit opposite thrift gifts. Play unlocks earn <strong>one</strong> spin per day. Soft prizes below are placeholders — <strong>prizes TBD</strong>. Text <strong>HIGH SCORE</strong> to Michael to win.</p>
+        <p class="text-sm muted">Eight soft slices — Farm Favor, scout badge, visit pass, STEM spark, parent favor, visit invite. Play unlocks earn <strong>one</strong> spin per day (honor-system). Win → <strong>See our services</strong>, then text <strong>HIGH SCORE</strong>.</p>
       </div>
 
       <div class="wheel-wrap">
@@ -162,24 +162,30 @@
         <h2 class="font-display" id="win-label" style="font-size:1.25rem;margin-top:0.35rem"></h2>
         <p class="text-sm" id="win-value" style="margin-top:0.25rem;color:var(--gold);font-weight:600"></p>
         <p class="text-sm muted" id="win-note" style="margin-top:0.45rem;line-height:1.45" hidden></p>
-        <a class="btn btn-outline btn-block" id="win-book" href="book.html" hidden style="margin-top:0.75rem">Book farm tour</a>
-        <a class="btn btn-primary btn-block" id="win-gold" href="gold.html" hidden style="margin-top:0.5rem">Claim Gold Card</a>
+        <a class="btn btn-primary btn-block" id="win-services" href="https://www.sheehanhomestead.com/services" target="_blank" rel="noopener" style="margin-top:0.75rem">See our services</a>
+        <a class="btn btn-outline btn-block" id="win-sms" href="sms:9142631311?&body=HIGH%20SCORE" style="margin-top:0.5rem">Text HIGH SCORE to 914-263-1311</a>
+        <a class="btn btn-ghost btn-block" id="win-book" href="https://www.sheehanhomestead.com/booking-help" target="_blank" rel="noopener" hidden style="margin-top:0.35rem">Booking help</a>
+        <a class="btn btn-ghost btn-block" id="win-gold" href="gold.html" hidden style="margin-top:0.35rem">Gold Card (optional)</a>
       </div>
 
       <div class="message-doors" id="message-doors" hidden>
-        <p class="message-doors-title">Three little doors 🚪</p>
-        <p class="message-doors-lede">Pick how you want to say hi — booking help, text HIGH SCORE, or a Facebook wave.</p>
+        <p class="message-doors-title">Next steps 🚪</p>
+        <p class="message-doors-lede">See our services first — then text HIGH SCORE, or a light booking-help / Facebook wave.</p>
         <div class="message-doors-grid">
-          <a class="message-door" id="door-book" href="https://www.sheehanhomestead.com/booking-help" target="_blank" rel="noopener">
-            <span class="message-door-emoji" aria-hidden="true">📅</span>
-            <span class="message-door-label">Book / booking help</span>
-            <span class="message-door-desc">Need a date? Open booking help — cute goats optional.</span>
+          <a class="message-door" id="door-services" href="https://www.sheehanhomestead.com/services" target="_blank" rel="noopener">
+            <span class="message-door-emoji" aria-hidden="true">🏡</span>
+            <span class="message-door-label">See our services</span>
+            <span class="message-door-desc">Mobile petting zoo, Visit Us, farm experiences — the real website.</span>
           </a>
-          <a class="message-door-alt" id="door-book-alt" href="https://onchainoffgrid-hub.github.io/critters-on-call/book.html?service=mobile" target="_blank" rel="noopener">or mobile book link →</a>
           <a class="message-door" id="door-sms" href="sms:9142631311?&body=HIGH%20SCORE">
             <span class="message-door-emoji" aria-hidden="true">📱</span>
             <span class="message-door-label">Text HIGH SCORE</span>
-            <span class="message-door-desc">Tap to text 914-263-1311 with HIGH SCORE — game win path (screenshot/score). Deal codes stay CODE/GOAT.</span>
+            <span class="message-door-desc">Tap to text 914-263-1311 — game win path (screenshot/score). Deal codes stay CODE/GOAT.</span>
+          </a>
+          <a class="message-door" id="door-book" href="https://www.sheehanhomestead.com/booking-help" target="_blank" rel="noopener">
+            <span class="message-door-emoji" aria-hidden="true">📅</span>
+            <span class="message-door-label">Booking help</span>
+            <span class="message-door-desc">Need a date? Optional — cute goats still optional.</span>
           </a>
           <a class="message-door" id="door-fb" href="https://www.facebook.com/profile.php?id=61556795506312" target="_blank" rel="noopener">
             <span class="message-door-emoji" aria-hidden="true">💛</span>
@@ -191,24 +197,25 @@
 
       <div class="wheel-upsell">
         <p class="text-xs" style="margin:0;line-height:1.45">
-          Want a free farm visit? Screenshot this win, leave a review on a
-          <a href="https://onchainoffgrid-hub.github.io/critters-play/" target="_blank" rel="noopener">Critters game</a>,
-          and bring a signed waiver.
+          Entertaining games kids can play — learn a little. Parents: peek at
+          <a href="https://www.sheehanhomestead.com/services" target="_blank" rel="noopener">Services</a>
+          · play more on
+          <a href="https://onchainoffgrid-hub.github.io/critters-play/" target="_blank" rel="noopener">Critters Play</a>.
         </p>
       </div>
 
-      <p class="text-xs muted" id="prize-tbd-note" style="text-align:center;margin:0">Prize menu = soft placeholders · <strong>prize TBD</strong> · claim by texting HIGH SCORE.</p>
+      <p class="text-xs muted" id="prize-tbd-note" style="text-align:center;margin:0">Soft digital prizes · limited · honor-system · primary path is <strong>See our services</strong>.</p>
       <ul class="prize-list" id="prize-list"></ul>
 
       <div class="wheel-page-links">
-        <a href="gold.html">Gold</a>
-        <a href="book.html">Book</a>
+        <a href="https://www.sheehanhomestead.com/services" target="_blank" rel="noopener">Services</a>
+        <a href="https://www.sheehanhomestead.com/booking-help" target="_blank" rel="noopener">Booking help</a>
         <a href="https://onchainoffgrid-hub.github.io/critters-play/">Games</a>
-        <a href="index.html">Home</a>
+        <a href="https://www.sheehanhomestead.com" target="_blank" rel="noopener">Website</a>
       </div>
 
       <p class="text-xs muted" style="text-align:center">
-        Gold Card MSRP $50 · includes farm / thrift / tour gift-stack narrative · claim via Gold.
+        Soft prizes · 1 earned spin claim / device / day · deal codes CODE/GOAT stay separate from HIGH SCORE.
       </p>
     </div>
   </main>
