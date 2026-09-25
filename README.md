@@ -22,3 +22,16 @@ http://localhost:8766/
 Eight slices: spin-again (Priceless) ×2 · Gold Membership ($50) ×2 · free farm gift ($25) · free thrift gift ($25) · free farm tour ($25) · Gold Pro nomination ($299).
 
 First spin in a browser always lands on spin-again. After that, fair random among all eight. Claim gifts/tours in person; Gold / Gold Pro via `gold.html`. Soft upsell: screenshot + Critters game review + signed waiver for a free farm visit.
+
+
+## Buzz demo (Play → one spin → doors)
+Consumer path from Critters Play unlocks:
+
+1. Play unlock (`?earn=gus|betty|elon`) grants **one** unclaimed spin (`coc_earned_wheel_spins_v1`)
+2. Spin claims it — button becomes **Earned spin used** (no free re-spin on this path)
+3. Three message doors appear (compose/links only — no payment):
+   - Book: https://www.sheehanhomestead.com/booking-help (+ mobile book secondary)
+   - Text: `sms:9142631311` body **GOAT**
+   - Facebook: https://www.facebook.com/profile.php?id=61556795506312
+
+Demo re-show: `wheel.html?earn=gus&demo=1` (reopens claimed earn).

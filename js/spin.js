@@ -9,11 +9,16 @@
   var pending = null;
   var SPUN_KEY = "coc_wheel_spun";
   var EARN_KEY = "coc_earned_wheel_spins_v1";
+  var VALID_EARN = { gus: true, betty: true, elon: true };
   var AGAIN_LINES = [
     "Isn't spinning again the best?",
     "Spinning again is priceless — don't ever forget that.",
     "Free spin. How sweet it is."
   ];
+  var BOOK_HELP = "https://www.sheehanhomestead.com/booking-help";
+  var BOOK_MOBILE = "https://onchainoffgrid-hub.github.io/critters-on-call/book.html?service=mobile";
+  var FB_URL = "https://www.facebook.com/profile.php?id=61556795506312";
+  var SMS_GOAT = "sms:9142631311?&body=" + encodeURIComponent("GOAT");
 
   var wheel = document.getElementById("prize-wheel");
   var spinBtn = document.getElementById("spin-btn");
@@ -25,8 +30,10 @@
   var winGold = document.getElementById("win-gold");
   var prizeList = document.getElementById("prize-list");
   var earnBanner = document.getElementById("earn-banner");
+  var messageDoors = document.getElementById("message-doors");
   var activeEarn = null;
   var spinningEarn = false;
+  var lastSpinWasEarn = false;
 
   function readEarns() {
     try {
@@ -44,12 +51,19 @@
     } catch (e) {}
   }
 
-  function grantEarn(dog) {
+  function grantEarn(dog, opts) {
     dog = String(dog || "").toLowerCase();
-    if (dog !== "gus" && dog !== "betty") return null;
+    if (!VALID_EARN[dog]) return null;
     var earns = readEarns();
     for (var i = 0; i < earns.length; i++) {
-      if (earns[i] && earns[i].dog === dog) return earns[i];
+      if (earns[i] && earns[i].dog === dog) {
+        if (opts && opts.fresh && earns[i].claimed) {
+          earns[i].claimed = false;
+          earns[i].at = new Date().toISOString();
+          writeEarns(earns);
+        }
+        return earns[i];
+      }
     }
     var rec = {
       id: dog + "-" + Date.now(),
@@ -89,7 +103,23 @@
   }
 
   function dogDisplayName(dog) {
-    return dog === "gus" ? "Gus" : dog === "betty" ? "Betty" : "a guardian";
+    if (dog === "gus") return "Gus";
+    if (dog === "betty") return "Betty";
+    if (dog === "elon") return "Evade Elon";
+    return "Play";
+  }
+
+  function showMessageDoors(show) {
+    if (!messageDoors) return;
+    messageDoors.hidden = !show;
+  }
+
+  function lockSpinAfterEarn() {
+    if (!spinBtn) return;
+    spinBtn.disabled = true;
+    spinBtn.textContent = "Earned spin used";
+    spinBtn.setAttribute("aria-disabled", "true");
+    spinBtn.classList.add("is-earn-spent");
   }
 
   function showEarnBanner(earn) {
@@ -102,20 +132,25 @@
     }
     earnBanner.hidden = false;
     earnBanner.textContent =
-      "Play reward: free spin from unlocking " + dogDisplayName(earn.dog);
-    if (spinBtn && !spinning) {
+      "Play reward: one free spin from " + dogDisplayName(earn.dog) + " — claim it once.";
+    if (spinBtn && !spinning && !lastSpinWasEarn) {
+      spinBtn.disabled = false;
       spinBtn.textContent = "Claim free spin";
+      spinBtn.classList.remove("is-earn-spent");
+      spinBtn.removeAttribute("aria-disabled");
     }
   }
 
   function resolveEarnFromQuery() {
     var dog = "";
+    var demo = false;
     try {
-      dog = (new URLSearchParams(location.search).get("earn") || "").toLowerCase();
+      var params = new URLSearchParams(location.search);
+      dog = (params.get("earn") || "").toLowerCase();
+      demo = params.get("demo") === "1";
     } catch (e) {}
-    if (dog === "gus" || dog === "betty") {
-      /* Deep link from Play — grant even if storage write raced */
-      grantEarn(dog);
+    if (VALID_EARN[dog]) {
+      grantEarn(dog, demo ? { fresh: true } : null);
     }
     showEarnBanner(findUnclaimed(dog || null));
   }
@@ -163,7 +198,7 @@
 
   /* First spin ever → again-slice bias; earned extras + later spins → fair */
   function pickIndex() {
-    if (!hasSpunBefore()) {
+    if (!hasSpunBefore() && !activeEarn) {
       var againIdx = [];
       for (var i = 0; i < prizes.length; i++) {
         if (prizes[i].again) againIdx.push(i);
@@ -197,45 +232,67 @@
   function finish() {
     spinning = false;
     wheel.classList.remove("is-spinning");
-    spinBtn.disabled = false;
-    if (!pending) return;
+    if (!pending) {
+      spinBtn.disabled = false;
+      return;
+    }
     markSpun();
-    if (spinningEarn && activeEarn) {
+
+    var wasEarn = spinningEarn && activeEarn;
+    if (wasEarn) {
       markEarnClaimed(activeEarn);
       spinningEarn = false;
-      showEarnBanner(findUnclaimed(null));
-      if (spinBtn && (!activeEarn)) spinBtn.textContent = pending.again ? "Spin again" : "Spin";
+      lastSpinWasEarn = true;
+      activeEarn = null;
+      showEarnBanner(null);
+      lockSpinAfterEarn();
+    } else {
+      spinBtn.disabled = false;
     }
+
     winCard.hidden = false;
+    /* Three doors = earned buzz path; free-spin path keeps existing book/gold CTAs */
+    showMessageDoors(!!wasEarn);
 
     if (pending.again) {
       var line = AGAIN_LINES[Math.floor(Math.random() * AGAIN_LINES.length)];
       winLabel.textContent = "How sweet it is";
       winValue.textContent = "Priceless";
-      setNote(line);
-      spinBtn.textContent = "Spin again";
-      C.toast(line);
+      if (wasEarn) {
+        setNote("Your earned spin is claimed — pick a door below. (No free re-spin on this path.)");
+        C.toast("Spin claimed · pick a door");
+      } else {
+        setNote(line);
+        spinBtn.textContent = "Spin again";
+        C.toast(line);
+      }
     } else {
       winLabel.textContent = pending.label;
       winValue.textContent = pending.value;
-      spinBtn.textContent = "Spin";
+      if (!wasEarn) spinBtn.textContent = "Spin";
       C.toast(pending.label + " · " + pending.value);
     }
 
     if (winBook) {
-      if (pending.book) {
+      if (pending.book && !wasEarn) {
         winBook.hidden = false;
         winBook.href = "book.html?service=" + encodeURIComponent(pending.book);
         if (pending.id === "poker") winBook.textContent = "Claim 2-person ticket";
         else if (pending.id === "goatee") winBook.textContent = "Book farm visit (in stack)";
         else winBook.textContent = "Book farm tour";
       } else {
+        /* Earned path uses the three doors instead */
         winBook.hidden = true;
       }
     }
 
     if (winGold) {
-      if (pending.claim === "goatee") {
+      if (wasEarn) {
+        winGold.hidden = true;
+        if (!pending.again) {
+          setNote("Nice land! Claim in person at Sheehan Homestead — or tap a door below.");
+        }
+      } else if (pending.claim === "goatee") {
         winGold.hidden = false;
         winGold.href = "gold.html";
         winGold.textContent = "Claim Golden Goatee";
@@ -267,7 +324,7 @@
           }
         }
       }
-    } else if (!pending.again) {
+    } else if (!pending.again && !wasEarn) {
       if (pending.book) {
         setNote("Claim in person at Sheehan Homestead — or book your tour below.");
       } else if (!pending.claim) {
@@ -288,10 +345,12 @@
 
   spinBtn.addEventListener("click", function () {
     if (spinning) return;
+    if (lastSpinWasEarn || spinBtn.classList.contains("is-earn-spent")) return;
     spinningEarn = !!activeEarn;
     var index = pickIndex();
     pending = prizes[index];
     winCard.hidden = true;
+    showMessageDoors(false);
     spinning = true;
     spinBtn.disabled = true;
     spinBtn.textContent = "Spinning";
@@ -311,5 +370,16 @@
     rotation = targetRotation(index, rotation);
     wheel.style.transform = "rotate(" + rotation + "deg)";
   });
+
+  /* Wire door hrefs if present */
+  var doorBook = document.getElementById("door-book");
+  var doorBookAlt = document.getElementById("door-book-alt");
+  var doorSms = document.getElementById("door-sms");
+  var doorFb = document.getElementById("door-fb");
+  if (doorBook) doorBook.href = BOOK_HELP;
+  if (doorBookAlt) doorBookAlt.href = BOOK_MOBILE;
+  if (doorSms) doorSms.href = SMS_GOAT;
+  if (doorFb) doorFb.href = FB_URL;
+
   resolveEarnFromQuery();
 })();

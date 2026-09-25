@@ -24,6 +24,59 @@
     color: var(--gold);
     font-weight: 600;
   }
+
+  .message-doors {
+    border-radius: 0.85rem;
+    border: 1px solid rgba(201,162,39,0.55);
+    background: rgba(201,162,39,0.1);
+    padding: 0.9rem 0.85rem 1rem;
+  }
+  .message-doors-title {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    color: var(--gold);
+    text-align: center;
+    margin: 0 0 0.35rem;
+  }
+  .message-doors-lede {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+    margin: 0 0 0.75rem;
+    line-height: 1.4;
+  }
+  .message-doors-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .message-door {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(201,162,39,0.45);
+    background: rgba(0,0,0,0.22);
+    padding: 0.7rem 0.85rem;
+    color: var(--fg, #f5f0e6);
+  }
+  .message-door:hover { border-color: var(--gold); }
+  .message-door-emoji { font-size: 1.35rem; display: block; margin-bottom: 0.15rem; }
+  .message-door-label { font-weight: 700; font-size: 0.95rem; color: var(--gold); display: block; }
+  .message-door-desc { font-size: 0.75rem; color: var(--muted); display: block; margin-top: 0.15rem; line-height: 1.35; }
+  .message-door-alt {
+    display: block;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--gold);
+    margin-top: 0.35rem;
+    font-weight: 600;
+  }
+  #spin-btn.is-earn-spent {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
   .earn-banner {
     border-radius: 0.85rem;
     border: 1px solid rgba(201,162,39,0.55);
@@ -79,6 +132,29 @@
         <p class="text-sm muted" id="win-note" style="margin-top:0.45rem;line-height:1.45" hidden></p>
         <a class="btn btn-outline btn-block" id="win-book" href="book.html" hidden style="margin-top:0.75rem">Book farm tour</a>
         <a class="btn btn-primary btn-block" id="win-gold" href="gold.html" hidden style="margin-top:0.5rem">Claim Gold Card</a>
+      </div>
+
+      <div class="message-doors" id="message-doors" hidden>
+        <p class="message-doors-title">Three little doors 🚪</p>
+        <p class="message-doors-lede">Pick how you want to say hi — booking help, a prize text, or a Facebook wave.</p>
+        <div class="message-doors-grid">
+          <a class="message-door" id="door-book" href="https://www.sheehanhomestead.com/booking-help" target="_blank" rel="noopener">
+            <span class="message-door-emoji" aria-hidden="true">📅</span>
+            <span class="message-door-label">Book / booking help</span>
+            <span class="message-door-desc">Need a date? Open booking help — cute goats optional.</span>
+          </a>
+          <a class="message-door-alt" id="door-book-alt" href="https://onchainoffgrid-hub.github.io/critters-on-call/book.html?service=mobile" target="_blank" rel="noopener">or mobile book link →</a>
+          <a class="message-door" id="door-sms" href="sms:9142631311?&body=GOAT">
+            <span class="message-door-emoji" aria-hidden="true">🐐</span>
+            <span class="message-door-label">Text GOAT</span>
+            <span class="message-door-desc">Tap to text 914-263-1311 with GOAT — prize keyword path.</span>
+          </a>
+          <a class="message-door" id="door-fb" href="https://www.facebook.com/profile.php?id=61556795506312" target="_blank" rel="noopener">
+            <span class="message-door-emoji" aria-hidden="true">💛</span>
+            <span class="message-door-label">Wave on Facebook</span>
+            <span class="message-door-desc">Say hi on the homestead page — we love a good comment.</span>
+          </a>
+        </div>
       </div>
 
       <div class="wheel-upsell">
