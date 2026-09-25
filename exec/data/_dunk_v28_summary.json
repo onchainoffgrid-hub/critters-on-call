@@ -1,0 +1,18 @@
+{
+  "as_of": "2026-09-25 4:20 PM ET",
+  "board_version": "Board v2.8 \u00b7 Sep 25 4:20 ET",
+  "lanes": {
+    "prior_mobile": 24,
+    "summer_cohort": 8,
+    "booked_no_review": 81,
+    "unknown_past": 2,
+    "warm_inbound": 60
+  },
+  "north_star": {
+    "money": 94,
+    "barter": 81
+  },
+  "customers": 115,
+  "warm": 60,
+  "one_touch_indexed": 87
+}
