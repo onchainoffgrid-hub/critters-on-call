@@ -8,6 +8,7 @@
   var reduceMotion = false;
   var pending = null;
   var SPUN_KEY = "coc_wheel_spun";
+  var EARN_KEY = "coc_earned_wheel_spins_v1";
   var AGAIN_LINES = [
     "Isn't spinning again the best?",
     "Spinning again is priceless — don't ever forget that.",
@@ -23,6 +24,101 @@
   var winBook = document.getElementById("win-book");
   var winGold = document.getElementById("win-gold");
   var prizeList = document.getElementById("prize-list");
+  var earnBanner = document.getElementById("earn-banner");
+  var activeEarn = null;
+  var spinningEarn = false;
+
+  function readEarns() {
+    try {
+      var raw = localStorage.getItem(EARN_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeEarns(arr) {
+    try {
+      localStorage.setItem(EARN_KEY, JSON.stringify(arr));
+    } catch (e) {}
+  }
+
+  function grantEarn(dog) {
+    dog = String(dog || "").toLowerCase();
+    if (dog !== "gus" && dog !== "betty") return null;
+    var earns = readEarns();
+    for (var i = 0; i < earns.length; i++) {
+      if (earns[i] && earns[i].dog === dog) return earns[i];
+    }
+    var rec = {
+      id: dog + "-" + Date.now(),
+      dog: dog,
+      at: new Date().toISOString(),
+      claimed: false
+    };
+    earns.push(rec);
+    writeEarns(earns);
+    return rec;
+  }
+
+  function findUnclaimed(preferDog) {
+    var earns = readEarns();
+    var dog = preferDog ? String(preferDog).toLowerCase() : "";
+    if (dog) {
+      for (var i = 0; i < earns.length; i++) {
+        if (earns[i] && earns[i].dog === dog && !earns[i].claimed) return earns[i];
+      }
+    }
+    for (var j = 0; j < earns.length; j++) {
+      if (earns[j] && !earns[j].claimed) return earns[j];
+    }
+    return null;
+  }
+
+  function markEarnClaimed(earn) {
+    if (!earn || !earn.id) return;
+    var earns = readEarns();
+    for (var i = 0; i < earns.length; i++) {
+      if (earns[i] && earns[i].id === earn.id) {
+        earns[i].claimed = true;
+        writeEarns(earns);
+        return;
+      }
+    }
+  }
+
+  function dogDisplayName(dog) {
+    return dog === "gus" ? "Gus" : dog === "betty" ? "Betty" : "a guardian";
+  }
+
+  function showEarnBanner(earn) {
+    activeEarn = earn;
+    if (!earnBanner) return;
+    if (!earn) {
+      earnBanner.hidden = true;
+      earnBanner.textContent = "";
+      return;
+    }
+    earnBanner.hidden = false;
+    earnBanner.textContent =
+      "Play reward: free spin from unlocking " + dogDisplayName(earn.dog);
+    if (spinBtn && !spinning) {
+      spinBtn.textContent = "Claim free spin";
+    }
+  }
+
+  function resolveEarnFromQuery() {
+    var dog = "";
+    try {
+      dog = (new URLSearchParams(location.search).get("earn") || "").toLowerCase();
+    } catch (e) {}
+    if (dog === "gus" || dog === "betty") {
+      /* Deep link from Play — grant even if storage write raced */
+      grantEarn(dog);
+    }
+    showEarnBanner(findUnclaimed(dog || null));
+  }
 
   try {
     reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -65,7 +161,7 @@
     }
   });
 
-  /* First spin ever → always an again slice; after that, fair among all 8 */
+  /* First spin ever → again-slice bias; earned extras + later spins → fair */
   function pickIndex() {
     if (!hasSpunBefore()) {
       var againIdx = [];
@@ -104,6 +200,12 @@
     spinBtn.disabled = false;
     if (!pending) return;
     markSpun();
+    if (spinningEarn && activeEarn) {
+      markEarnClaimed(activeEarn);
+      spinningEarn = false;
+      showEarnBanner(findUnclaimed(null));
+      if (spinBtn && (!activeEarn)) spinBtn.textContent = pending.again ? "Spin again" : "Spin";
+    }
     winCard.hidden = false;
 
     if (pending.again) {
@@ -186,6 +288,7 @@
 
   spinBtn.addEventListener("click", function () {
     if (spinning) return;
+    spinningEarn = !!activeEarn;
     var index = pickIndex();
     pending = prizes[index];
     winCard.hidden = true;
@@ -208,4 +311,5 @@
     rotation = targetRotation(index, rotation);
     wheel.style.transform = "rotate(" + rotation + "deg)";
   });
+  resolveEarnFromQuery();
 })();
