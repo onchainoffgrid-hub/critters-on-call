@@ -18,7 +18,9 @@
   var BOOK_HELP = "https://www.sheehanhomestead.com/booking-help";
   var BOOK_MOBILE = "https://onchainoffgrid-hub.github.io/critters-on-call/book.html?service=mobile";
   var FB_URL = "https://www.facebook.com/profile.php?id=61556795506312";
-  var SMS_GOAT = "sms:9142631311?&body=" + encodeURIComponent("GOAT");
+  var SMS_HIGH_SCORE = "sms:9142631311?&body=" + encodeURIComponent("HIGH SCORE");
+  var CAPS_KEY = "coc_play_caps_v1";
+  var SPIN_CLAIMS_PER_DAY = 1;
 
   var wheel = document.getElementById("prize-wheel");
   var spinBtn = document.getElementById("spin-btn");
@@ -49,6 +51,38 @@
     try {
       localStorage.setItem(EARN_KEY, JSON.stringify(arr));
     } catch (e) {}
+  }
+
+
+  function todayKey() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  function readCaps() {
+    try {
+      var raw = localStorage.getItem(CAPS_KEY);
+      var obj = raw ? JSON.parse(raw) : null;
+      if (!obj || typeof obj !== "object") obj = {};
+      if (obj.date !== todayKey()) {
+        obj = { date: todayKey(), plays: {}, spinClaims: 0 };
+        try { localStorage.setItem(CAPS_KEY, JSON.stringify(obj)); } catch (e2) {}
+      }
+      if (typeof obj.spinClaims !== "number") obj.spinClaims = 0;
+      return obj;
+    } catch (e) {
+      return { date: todayKey(), plays: {}, spinClaims: 0 };
+    }
+  }
+
+  function canClaimSpinToday() {
+    return (readCaps().spinClaims || 0) < SPIN_CLAIMS_PER_DAY;
+  }
+
+  function recordSpinClaimToday() {
+    var caps = readCaps();
+    caps.spinClaims = (caps.spinClaims || 0) + 1;
+    try { localStorage.setItem(CAPS_KEY, JSON.stringify(caps)); } catch (e) {}
   }
 
   function grantEarn(dog, opts) {
@@ -130,9 +164,22 @@
       earnBanner.textContent = "";
       return;
     }
+    if (!canClaimSpinToday()) {
+      activeEarn = null;
+      earnBanner.hidden = false;
+      earnBanner.textContent =
+        "Play reward from " + dogDisplayName(earn.dog) + " waiting — daily spin claim used. Text HIGH SCORE to 914-263-1311, or come back tomorrow.";
+      if (spinBtn && !spinning) {
+        spinBtn.disabled = true;
+        spinBtn.textContent = "Come back tomorrow";
+        spinBtn.classList.add("is-earn-spent");
+        spinBtn.setAttribute("aria-disabled", "true");
+      }
+      return;
+    }
     earnBanner.hidden = false;
     earnBanner.textContent =
-      "Play reward: one free spin from " + dogDisplayName(earn.dog) + " — claim it once.";
+      "Play reward: one free spin from " + dogDisplayName(earn.dog) + " — claim once (1/day). Prizes TBD.";
     if (spinBtn && !spinning && !lastSpinWasEarn) {
       spinBtn.disabled = false;
       spinBtn.textContent = "Claim free spin";
@@ -241,6 +288,7 @@
     var wasEarn = spinningEarn && activeEarn;
     if (wasEarn) {
       markEarnClaimed(activeEarn);
+      recordSpinClaimToday();
       spinningEarn = false;
       lastSpinWasEarn = true;
       activeEarn = null;
@@ -259,7 +307,7 @@
       winLabel.textContent = "How sweet it is";
       winValue.textContent = "Priceless";
       if (wasEarn) {
-        setNote("Your earned spin is claimed — pick a door below. (No free re-spin on this path.)");
+        setNote("Spin claimed — text HIGH SCORE to 914-263-1311 (prizes TBD). No free re-spin today.");
         C.toast("Spin claimed · pick a door");
       } else {
         setNote(line);
@@ -290,7 +338,7 @@
       if (wasEarn) {
         winGold.hidden = true;
         if (!pending.again) {
-          setNote("Nice land! Claim in person at Sheehan Homestead — or tap a door below.");
+          setNote("Nice land! Prizes TBD — text HIGH SCORE to 914-263-1311 with a screenshot, or tap a door below.");
         }
       } else if (pending.claim === "goatee") {
         winGold.hidden = false;
@@ -346,6 +394,10 @@
   spinBtn.addEventListener("click", function () {
     if (spinning) return;
     if (lastSpinWasEarn || spinBtn.classList.contains("is-earn-spent")) return;
+    if (activeEarn && !canClaimSpinToday()) {
+      showEarnBanner(activeEarn);
+      return;
+    }
     spinningEarn = !!activeEarn;
     var index = pickIndex();
     pending = prizes[index];
@@ -378,7 +430,7 @@
   var doorFb = document.getElementById("door-fb");
   if (doorBook) doorBook.href = BOOK_HELP;
   if (doorBookAlt) doorBookAlt.href = BOOK_MOBILE;
-  if (doorSms) doorSms.href = SMS_GOAT;
+  if (doorSms) doorSms.href = SMS_HIGH_SCORE;
   if (doorFb) doorFb.href = FB_URL;
 
   resolveEarnFromQuery();
