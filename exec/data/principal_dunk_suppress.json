@@ -1,552 +1,148 @@
 {
-  "deduped_as_of": "2026-09-25 10:36 ET",
+  "deduped_as_of": "2026-09-25 14:54 ET",
   "suppress_sources": [
-    "recent_outreach.json",
-    "Gmail in:sent newer_than:365d (recipient overlap)",
-    "customers_no_next_date.json",
-    "paypal_customers.json (payer name)",
-    "bookings_pipeline.json",
-    "intra-list email + account/title"
+    "Gmail in:sent after:2026/09/24 + newer_than:2d (petting/festival subjects)",
+    "customers_no_next_date.json + paypal_customers.json",
+    "bookings_pipeline.json emails",
+    "intra-list email"
   ],
   "suppress_counts": {
-    "outreach_sent": 9,
-    "gmail_sent": 6,
-    "customer_email": 33,
-    "customer_account": 7,
+    "outreach_sent": 0,
+    "gmail_sent": 77,
+    "gmail_sent_today": 44,
+    "customer_email": 0,
+    "customer_account": 0,
     "paypal_name": 0,
-    "dup_account_title": 0
+    "booking_pipeline": 1,
+    "dup_account_title": 0,
+    "cdd_hoa_removed_this_pass": 0,
+    "cdd_hoa_added_this_pass": 40,
+    "university_added": 25,
+    "enterprise_added": 16
   },
-  "suppress_total": 55,
-  "outreach_email_universe": 28,
-  "gmail_recipient_universe": 55,
+  "suppress_total": 78,
+  "gmail_recipient_universe": 77,
+  "gmail_today_unique": 44,
   "customer_email_universe": 125,
-  "account_universe": 224,
   "samples": {
-    "outreach_sent": [
-      {
-        "account": "Durbin Creek Elementary PTO",
-        "email": "explorers@dcepto.org",
-        "contact": "Chantelle Gauthier",
-        "title": "Co-President"
-      },
-      {
-        "account": "Holiday Hill Elementary PTA",
-        "email": "holidayhillpta@gmail.com",
-        "contact": "Kelli Carpenter",
-        "title": "PTA President"
-      },
-      {
-        "account": "Friends of Jacksonville Beach Elementary PTO",
-        "email": "fojbeptopresident@gmail.com",
-        "contact": "",
-        "title": "PTO President"
-      },
-      {
-        "account": "St. Augustine Historical Society",
-        "email": "magen@sahs1883.com",
-        "contact": "Magen Altice",
-        "title": "Executive Director"
-      },
-      {
-        "account": "Lavilla Arts School",
-        "email": "lavillavisualartsboosters@gmail.com",
-        "contact": "Full PZ",
-        "title": "PTA/PTO President"
-      },
-      {
-        "account": "Senetra Manuel",
-        "email": "aroundtheclockkidcare904@gmail.com",
-        "contact": "Senetra Manuel",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Life Care Center of Orange Park",
-        "email": "robin_dake@lcca.com",
-        "contact": "Robin Dake",
-        "title": "Activities Director"
-      },
-      {
-        "account": "Ivybrook Academy Valley Ridge PTO",
-        "email": "ivybrookptovr@gmail.com",
-        "contact": "Sanela Chan",
-        "title": "PTO President"
-      }
-    ],
     "gmail_sent": [
       {
-        "account": "Duval Landscape Maintenance",
-        "email": "info@duvallandscape.com",
-        "contact": "Rob Bullock",
-        "title": "President"
+        "account": "Dinsmore Elementary PTA",
+        "email": "dinsmorepta@gmail.com",
+        "contact": "",
+        "title": "PTA President",
+        "persona": "school"
       },
       {
-        "account": "James A. Webster Elementary PTO",
-        "email": "thewebsterschoolpto@gmail.com",
-        "contact": "Sherria Joye",
-        "title": "PTO President"
+        "account": "St. Luke Child Care Center",
+        "email": "director@stlukechildcare.org",
+        "contact": "Amy Roberts",
+        "title": "Director",
+        "persona": "daycare"
       },
       {
-        "account": "Abess Park Elementary",
-        "email": "marykslover@gmail.com",
-        "contact": "Abess Park Elementary",
-        "title": "PTA/PTO President"
+        "account": "Fishweir Elementary PTA",
+        "email": "fishweirelementary@gmail.com",
+        "contact": "",
+        "title": "PTA",
+        "persona": "school"
+      },
+      {
+        "account": "Freedom Crossing Academy PTO",
+        "email": "freedomcrossingacademypto@gmail.com",
+        "contact": "",
+        "title": "PTO President",
+        "persona": "school"
+      },
+      {
+        "account": "Gamble Rogers Middle School PTO",
+        "email": "gamblerogerspto@gmail.com",
+        "contact": "Devin Schneider",
+        "title": "PTO President",
+        "persona": "school"
+      },
+      {
+        "account": "Christ's Church",
+        "email": "hello@christs.church",
+        "contact": "Sophie Davis",
+        "title": "Kids Pastor",
+        "persona": "church"
+      },
+      {
+        "account": "Lighthouse Church of God",
+        "email": "lighthousechurch904@gmail.com",
+        "contact": "Andi Kohlhepp",
+        "title": "Children's Pastor",
+        "persona": "church"
+      },
+      {
+        "account": "Patriot Oaks Academy PTO",
+        "email": "patriotoakspto@gmail.com",
+        "contact": "Amanda Causey",
+        "title": "PTO President",
+        "persona": "school"
+      },
+      {
+        "account": "Lakes Crossing Senior Care",
+        "email": "pmcneal@georgialivingseniorcare.com",
+        "contact": "Patti McNeal",
+        "title": "Executive Director",
+        "persona": "senior"
+      },
+      {
+        "account": "Lakeside Academy PTO",
+        "email": "president@lakesideacademypto.org",
+        "contact": "Kristin Duguid",
+        "title": "PTO President",
+        "persona": "school"
+      }
+    ],
+    "owe": [
+      {
+        "account": "Bartram Springs Elementary PTA",
+        "email": "bseptapres@gmail.com",
+        "owe_reason": "Pipeline CALL_OFFERED \u00b7 Michael offered call Sep 25"
+      },
+      {
+        "account": "Brooks Bartram Lakes",
+        "email": "katelyn.woodcock-sharp@brooksrehab.org",
+        "owe_reason": "Pipeline WAITING_MONDAY \u00b7 Kate answer Monday"
       },
       {
         "account": "Palagio Senior Living",
-        "email": "lifeenrichmentdirector@palagioseniorliving.com",
-        "contact": "Kristi Wilder",
-        "title": "Life Enrichment Director"
+        "email": "businessofficedirector@palagioseniorliving.com",
+        "owe_reason": "Warm unreplied dunk \u00b7 confirm fall fest date"
       },
       {
-        "account": "The Windsor at Ortega",
-        "email": "deandre.stringer@legendseniorliving.com",
-        "contact": "Deandre Stringer",
-        "title": "Life Enrichment Director"
+        "account": "Starling at San Jose",
+        "email": "sanjose@starlingliving.com",
+        "owe_reason": "Follow-up owed \u00b7 Starling life enrichment"
       },
       {
-        "account": "Fletcher's Tender Care, LLC",
-        "email": "ecooks@fletcherstendercare.com",
-        "contact": "Ericka Cooks",
-        "title": "Center Director / Regional"
+        "account": "Atlantic Beach Country Club",
+        "email": "laura@atlanticbeachcountryclub.com",
+        "owe_reason": "Warm lead \u00b7 send pricing"
+      },
+      {
+        "account": "Angels of Care",
+        "email": "bthomas@angelsofcare.com",
+        "owe_reason": "Soft yes \u00b7 push date"
+      },
+      {
+        "account": "River City Science Academy",
+        "email": "lburnette@rivercityscience.org",
+        "owe_reason": "Pipeline soft_yes \u00b7 push date"
       }
     ],
-    "customer_email": [
-      {
-        "account": "Christ the King Early Learning Center",
-        "email": "wtlaharrington@gmail.com",
-        "contact": "Laura Hacker",
-        "title": "Director"
-      },
-      {
-        "account": "Amazing Explorers Academy \u2013 Rivertown - St. Johns",
-        "email": "jlane@aexplorers.com",
-        "contact": "jlane@aexplorers.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Amazing Explorers Academy \u2013 Silverleaf",
-        "email": "ei@aexplorers.com",
-        "contact": "ei@aexplorers.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Big Blue Marble Academy - Bartram Park",
-        "email": "center88@bbmacademy.com",
-        "contact": "Ms. Kelsey Blackford , center88@bbmacademy.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Big Blue Marble Academy - San Pablo",
-        "email": "center87@bbmacademy.com",
-        "contact": "center87@bbmacademy.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "O2B Kids \u2013 Durbin Creek",
-        "email": "info@o2bkids.com",
-        "contact": "info@o2bkids.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Primrose School of St Johns Forest",
-        "email": "edguevara@primrosestjohnsforest.com",
-        "contact": "email November 2024 - Ed and Marta Guevara owners /Shannon Metros Director",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "The Learning Experience - St. Augustine",
-        "email": "staugustine@tlechildcare.com",
-        "contact": "staugustine@tlechildcare.com",
-        "title": "Center Director / Regional"
-      }
-    ],
-    "customer_account": [
-      {
-        "account": "Edward Waters University",
-        "email": "v.chrispin@ewc.edu",
-        "contact": "Victor Chrispin",
-        "title": "Director of Black Male College Explorers / Assistant Director of Student Activities and Leadership"
-      },
-      {
-        "account": "Flagler College",
-        "email": "lgullage@flagler.edu",
-        "contact": "Logan Gullage",
-        "title": "Assistant Director, Student Engagement, SGA Advisor"
-      },
-      {
-        "account": "Jacksonville University",
-        "email": "kkieler@ju.edu",
-        "contact": "Kira Kieler",
-        "title": "Assistant Director of Student Engagement and Leadership"
-      },
-      {
-        "account": "LaVilla School of the Arts PTSA",
-        "email": "harrisonk2@duvalschools.org",
-        "contact": "Kimberly Harrison",
-        "title": "Principal"
-      },
-      {
-        "account": "Assumption Catholic School",
-        "email": "mjimenez@assumptionjax.org",
-        "contact": "Maryann Jimenez",
-        "title": "Principal"
-      },
-      {
-        "account": "Christ the King Early Learning Center",
-        "email": "rhawkins@ctkearlylearning.com",
-        "contact": "Rachel Hawkins",
-        "title": "Director"
-      },
-      {
-        "account": "NFSSE",
-        "email": "lwashburn@northfloridaschool.org",
-        "contact": "NFSSE 7/7/25",
-        "title": "PTA/PTO President"
-      }
-    ],
-    "paypal_name": [],
-    "dup_account_title": []
-  },
-  "removed": {
-    "outreach_sent": [
-      {
-        "account": "Durbin Creek Elementary PTO",
-        "email": "explorers@dcepto.org",
-        "contact": "Chantelle Gauthier",
-        "title": "Co-President"
-      },
-      {
-        "account": "Holiday Hill Elementary PTA",
-        "email": "holidayhillpta@gmail.com",
-        "contact": "Kelli Carpenter",
-        "title": "PTA President"
-      },
-      {
-        "account": "Friends of Jacksonville Beach Elementary PTO",
-        "email": "fojbeptopresident@gmail.com",
-        "contact": "",
-        "title": "PTO President"
-      },
-      {
-        "account": "St. Augustine Historical Society",
-        "email": "magen@sahs1883.com",
-        "contact": "Magen Altice",
-        "title": "Executive Director"
-      },
-      {
-        "account": "Lavilla Arts School",
-        "email": "lavillavisualartsboosters@gmail.com",
-        "contact": "Full PZ",
-        "title": "PTA/PTO President"
-      },
-      {
-        "account": "Senetra Manuel",
-        "email": "aroundtheclockkidcare904@gmail.com",
-        "contact": "Senetra Manuel",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Life Care Center of Orange Park",
-        "email": "robin_dake@lcca.com",
-        "contact": "Robin Dake",
-        "title": "Activities Director"
-      },
-      {
-        "account": "Ivybrook Academy Valley Ridge PTO",
-        "email": "ivybrookptovr@gmail.com",
-        "contact": "Sanela Chan",
-        "title": "PTO President"
-      },
-      {
-        "account": "Kate Fraser",
-        "email": "kfraser@greenwoodjax.org",
-        "contact": "Greenwood Schools",
-        "title": "PTA/PTO President"
-      }
-    ],
-    "gmail_sent": [
-      {
-        "account": "Duval Landscape Maintenance",
-        "email": "info@duvallandscape.com",
-        "contact": "Rob Bullock",
-        "title": "President"
-      },
-      {
-        "account": "James A. Webster Elementary PTO",
-        "email": "thewebsterschoolpto@gmail.com",
-        "contact": "Sherria Joye",
-        "title": "PTO President"
-      },
-      {
-        "account": "Abess Park Elementary",
-        "email": "marykslover@gmail.com",
-        "contact": "Abess Park Elementary",
-        "title": "PTA/PTO President"
-      },
-      {
-        "account": "Palagio Senior Living",
-        "email": "lifeenrichmentdirector@palagioseniorliving.com",
-        "contact": "Kristi Wilder",
-        "title": "Life Enrichment Director"
-      },
-      {
-        "account": "The Windsor at Ortega",
-        "email": "deandre.stringer@legendseniorliving.com",
-        "contact": "Deandre Stringer",
-        "title": "Life Enrichment Director"
-      },
-      {
-        "account": "Fletcher's Tender Care, LLC",
-        "email": "ecooks@fletcherstendercare.com",
-        "contact": "Ericka Cooks",
-        "title": "Center Director / Regional"
-      }
-    ],
-    "customer_email": [
-      {
-        "account": "Christ the King Early Learning Center",
-        "email": "wtlaharrington@gmail.com",
-        "contact": "Laura Hacker",
-        "title": "Director"
-      },
-      {
-        "account": "Amazing Explorers Academy \u2013 Rivertown - St. Johns",
-        "email": "jlane@aexplorers.com",
-        "contact": "jlane@aexplorers.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Amazing Explorers Academy \u2013 Silverleaf",
-        "email": "ei@aexplorers.com",
-        "contact": "ei@aexplorers.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Big Blue Marble Academy - Bartram Park",
-        "email": "center88@bbmacademy.com",
-        "contact": "Ms. Kelsey Blackford , center88@bbmacademy.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Big Blue Marble Academy - San Pablo",
-        "email": "center87@bbmacademy.com",
-        "contact": "center87@bbmacademy.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "O2B Kids \u2013 Durbin Creek",
-        "email": "info@o2bkids.com",
-        "contact": "info@o2bkids.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Primrose School of St Johns Forest",
-        "email": "edguevara@primrosestjohnsforest.com",
-        "contact": "email November 2024 - Ed and Marta Guevara owners /Shannon Metros Director",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "The Learning Experience - St. Augustine",
-        "email": "staugustine@tlechildcare.com",
-        "contact": "staugustine@tlechildcare.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "The Learning Experience \u2013 Oakleaf",
-        "email": "jacksonvilleoakleaf@tlechildcare.com",
-        "contact": "jacksonvilleoakleaf@tlechildcare.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "The Learning Experience \u2013 River City",
-        "email": "rivercity@tlechildcare.com",
-        "contact": "rivercity@tlechildcare.com",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "intercoastal",
-        "email": "info@intercoastalkids.com",
-        "contact": "intercoastal in september 25'",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Coach Leah Bennett- Trinity Mandarin",
-        "email": "coachleah15@outlook.com",
-        "contact": "Violete Ticket- 3.16",
-        "title": "Children's / Family Ministry"
-      },
-      {
-        "account": "Jericho - Beatrix",
-        "email": "mbeatrix@thejerichoschool.org",
-        "contact": "Jericho - Beatrix",
-        "title": "PTA/PTO President"
-      },
-      {
-        "account": "Ricky Vence",
-        "email": "rlvthesinger@gmail.com",
-        "contact": "Ricky Vence",
-        "title": "Children's / Family Ministry"
-      },
-      {
-        "account": "Rosette Pool",
-        "email": "rpoole@opajax.org",
-        "contact": "Rosette Pool",
-        "title": "PTA/PTO President"
-      },
-      {
-        "account": "YCC - Peter Hicks",
-        "email": "phicks@ycc.org",
-        "contact": "",
-        "title": "PTA/PTO President"
-      },
-      {
-        "account": "Rosecastle at Deerwood",
-        "email": "sales@seniorsjacksonville.com",
-        "contact": "Seniors Jacksonville",
-        "title": "Life Enrichment Director"
-      },
-      {
-        "account": "DCC LEE Enterprises (McDonald's)",
-        "email": "comments@mcdjax.com",
-        "contact": "David Mullins",
-        "title": "Owner/Operator / President"
-      },
-      {
-        "account": "HarborChase of Mandarin",
-        "email": "mandarindle@harborchase.com",
-        "contact": "Manda Rindle",
-        "title": "Life Enrichment Director"
-      },
-      {
-        "account": "Seagrass Village of Fleming Island",
-        "email": "life@seagrassvillagefi.com",
-        "contact": "",
-        "title": "Life Enrichment Director"
-      },
-      {
-        "account": "Palm Garden of Jacksonville",
-        "email": "patrice.pusha@palmgarden.com",
-        "contact": "Patrice Pusha",
-        "title": "Activities Director"
-      },
-      {
-        "account": "Peaches-Na-Basket Adult Day Care Center, Inc.",
-        "email": "peachesnabasket@gmail.com",
-        "contact": "Dolores Flemming",
-        "title": "Executive Director / Administrator"
-      },
-      {
-        "account": "Ponte Vedra Gardens Alzheimer's Special Care Center",
-        "email": "dee.stanziano@gardensmemorycare.com",
-        "contact": "Dee Stanziano",
-        "title": "Activities Director"
-      },
-      {
-        "account": "San Jose Gardens Alzheimer's Special Care Center",
-        "email": "christina.dutcher@gardensmemorycare.com",
-        "contact": "Christina Dutcher",
-        "title": "Program Director"
-      },
-      {
-        "account": "Wyndham Lakes Jacksonville",
-        "email": "ad.wyndhamlakes@pacificaseniorliving.com",
-        "contact": "Libby Leroy Activities Director",
-        "title": "Activities Director"
-      },
-      {
-        "account": "Edward Waters University",
-        "email": "o.nevels@ew.edu",
-        "contact": "Otha Nevels",
-        "title": "Program Director, Office of Student Activities and Leadership"
-      },
-      {
-        "account": "Embry-Riddle Aeronautical University Worldwide",
-        "email": "jacksonville@erau.edu",
-        "contact": "Kimberly Shaw",
-        "title": "Jacksonville Area Campus Director"
-      },
-      {
-        "account": "Ivybrook Academy Valley Ridge",
-        "email": "jennifer.ripkey@ivybrookacademy.com",
-        "contact": "Jennifer Ripkey",
-        "title": "Program Director"
-      },
-      {
-        "account": "LaVilla School of the Arts PTSA",
-        "email": "lasotaptsa@gmail.com",
-        "contact": "Geretha Terrell Moore",
-        "title": "PTSA President"
-      },
-      {
-        "account": "Springfield Preservation and Revitalization Council",
-        "email": "michael.haskins@sparcouncil.org",
-        "contact": "Michael Haskins",
-        "title": "Executive Director"
-      },
-      {
-        "account": "Advanced Care Partners - Brittany Thomas",
-        "email": "bthomas@advancedcarepartners.com",
-        "contact": "Brittany Thomas",
-        "title": "Center Director / Regional"
-      },
-      {
-        "account": "Starling at Nocatee",
-        "email": "nocatee@starlingliving.com",
-        "contact": "Jana Alexander",
-        "title": "Life Enrichment Director"
-      },
-      {
-        "account": "Amelia Springs Assisted Living",
-        "email": "admin@ameliaspringsalf.com",
-        "contact": "Activities Director",
-        "title": "Activities Director"
-      }
-    ],
-    "customer_account": [
-      {
-        "account": "Edward Waters University",
-        "email": "v.chrispin@ewc.edu",
-        "contact": "Victor Chrispin",
-        "title": "Director of Black Male College Explorers / Assistant Director of Student Activities and Leadership"
-      },
-      {
-        "account": "Flagler College",
-        "email": "lgullage@flagler.edu",
-        "contact": "Logan Gullage",
-        "title": "Assistant Director, Student Engagement, SGA Advisor"
-      },
-      {
-        "account": "Jacksonville University",
-        "email": "kkieler@ju.edu",
-        "contact": "Kira Kieler",
-        "title": "Assistant Director of Student Engagement and Leadership"
-      },
-      {
-        "account": "LaVilla School of the Arts PTSA",
-        "email": "harrisonk2@duvalschools.org",
-        "contact": "Kimberly Harrison",
-        "title": "Principal"
-      },
-      {
-        "account": "Assumption Catholic School",
-        "email": "mjimenez@assumptionjax.org",
-        "contact": "Maryann Jimenez",
-        "title": "Principal"
-      },
-      {
-        "account": "Christ the King Early Learning Center",
-        "email": "rhawkins@ctkearlylearning.com",
-        "contact": "Rachel Hawkins",
-        "title": "Director"
-      },
-      {
-        "account": "NFSSE",
-        "email": "lwashburn@northfloridaschool.org",
-        "contact": "NFSSE 7/7/25",
-        "title": "PTA/PTO President"
-      }
-    ],
-    "paypal_name": [],
-    "dup_account_title": []
+    "next40_mix": {
+      "school": 6,
+      "church": 5,
+      "daycare": 5,
+      "senior": 5,
+      "cdd": 6,
+      "university": 5,
+      "enterprise": 5,
+      "other": 3
+    }
   }
 }
