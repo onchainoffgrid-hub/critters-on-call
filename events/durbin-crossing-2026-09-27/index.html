@@ -185,6 +185,48 @@
     background: rgba(76,100,88,0.4); padding: 0.85rem; text-align: center; margin-top: 0.5rem;
   }
   .again-banner strong { color: var(--card-gold); }
+  /* Labels fully inside wedges: smaller type, narrower, closer to rim */
+  .dc-wheel .wheel-label {
+    font-size: 0.48rem;
+    letter-spacing: 0.015em;
+  }
+  .dc-wheel .wheel-label span {
+    top: 0.32rem;
+    width: 2.85rem;
+    max-width: 26%;
+    line-height: 1.05;
+    word-break: break-word;
+  }
+  .ended-banner {
+    margin: 0.75rem auto 0; max-width: 22rem;
+    padding: 1rem 0.9rem;
+    border-radius: 0.85rem;
+    border: 2px solid rgba(201,162,39,0.55);
+    background: rgba(26,36,28,0.92);
+    text-align: center;
+  }
+  .ended-banner strong { color: var(--card-gold); font-size: 1.05rem; display: block; margin-bottom: 0.35rem; }
+  .ended-banner p { font-size: 0.8rem; color: var(--muted); line-height: 1.4; margin: 0; }
+  .soft-expiry {
+    text-align: center; font-size: 0.72rem; color: var(--muted);
+    margin: 0.35rem 0 0; line-height: 1.35;
+  }
+  .gold-scarcity {
+    text-align: center; font-size: 0.72rem; color: var(--card-gold);
+    font-weight: 600; margin: 0.35rem 0 0; line-height: 1.35;
+  }
+  .review-prompt {
+    margin-top: 0.85rem; padding: 0.75rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(201,162,39,0.4);
+    background: rgba(76,100,88,0.35);
+    text-align: center;
+  }
+  .review-prompt a {
+    color: var(--card-gold); font-weight: 700; font-size: 0.95rem;
+    text-decoration: underline;
+  }
+  .review-prompt .hint { font-size: 0.7rem; color: var(--muted); margin-top: 0.25rem; }
 </style>
 </head>
 <body>
@@ -208,6 +250,12 @@
         <p class="tracker-kicker" style="margin:0">Event-only prize wheel</p>
         <h1 class="event-title">Critters on Call <span>×</span> Durbin Crossing</h1>
         <p class="event-sub">Scan a Golden Goat · spin · unlock your prize</p>
+        <p class="soft-expiry" id="soft-expiry">Wheel open through Mon Sep 28</p>
+        <p class="gold-scarcity">Only 5 gold statues at this event.</p>
+        <div class="ended-banner" id="ended-banner" hidden>
+          <strong>Event ended</strong>
+          <p>This Durbin Crossing prize wheel closed after Monday, September 28, 2026. Thanks for spinning with Critters on Call.</p>
+        </div>
         <div class="event-details" id="event-details">
           <strong>Sunday, September 27, 2026</strong> · 10 AM – 1 PM<br />
           <span class="addr">Durbin Crossing · 145 South Durbin Parkway<br />St Johns, FL 32259</span>
@@ -235,7 +283,7 @@
       </div>
 
       <button class="btn btn-primary btn-block" type="button" id="spin-btn">Spin the wheel</button>
-      <p class="rules-note">Max 3 spins · one prize claim per email <em>and</em> phone for this event · Spin again does not use up a claim</p>
+      <p class="rules-note">Max 3 spins · one prize claim per email <em>and</em> phone for this event · Spin again does not use up a claim · Gold membership capped at 5 awards (only 5 gold statues at this event)</p>
 
       <div class="win-card" id="win-card" hidden>
         <p class="tracker-kicker" id="win-kicker">You won</p>
@@ -246,7 +294,11 @@
         <p class="code-hint" id="win-code-hint" hidden></p>
         <div class="premium-banner" id="premium-banner" hidden>
           <strong>GOLD MEMBERSHIP</strong>
-          <p class="text-xs muted" style="margin-top:0.35rem;line-height:1.4">Show this screen to staff to activate your Critter Gold membership.</p>
+          <p class="text-xs muted" style="margin-top:0.35rem;line-height:1.4">Show this screen to staff to activate your Critter Gold membership. Only 5 gold statues at this event.</p>
+        </div>
+        <div class="review-prompt" id="review-prompt" hidden>
+          <a id="review-link" href="https://g.page/r/CS74JMTm3xrWEAE/review" target="_blank" rel="noopener">Love it? Leave a Google review</a>
+          <p class="hint">Optional · Sheehan Homestead on Google</p>
         </div>
         <div class="again-banner" id="again-banner" hidden>
           <strong>Spin again!</strong>
@@ -254,7 +306,7 @@
         </div>
         <div class="unlock-panel" id="unlock-panel" hidden>
           <h3>Unlock your prize</h3>
-          <p class="unlock-sub">Moms: tap one — dead simple. Staff can also save your contact below.</p>
+          <p class="unlock-sub">Tap Text GOAT to unlock, or email us. Optional: save contact below for staff.</p>
           <div class="cta-row" id="unlock-ctas"></div>
           <details class="optional-lead" id="optional-lead">
             <summary>+ Optional: save email &amp; phone for staff (one claim per contact)</summary>
@@ -297,10 +349,17 @@
   var EVENT_DATE = "2026-09-27";
   var EVENT_LABEL = "Sunday, September 27, 2026";
   var MAX_SPINS = 3;
+  var GOLD_CAP = 5;
+  /* End of Mon Sep 28 night = start of Tue Sep 29 America/New_York */
+  var EXPIRES_Y = 2026;
+  var EXPIRES_M = 9;  /* September */
+  var EXPIRES_D = 29; /* midnight → Sep 29 00:00:00 ET */
   var STORE_LEADS = "coc_dc_leads_v1";
   var STORE_DEVICE = "coc_dc_device_v1_" + EVENT_ID;
+  var STORE_GOLD = "coc_dc_gold_awards_v1_" + EVENT_ID;
   var FB_URL = "https://www.facebook.com/profile.php?id=61556795506312";
   var SERVICES_URL = "https://www.sheehanhomestead.com/services";
+  var REVIEW_URL = "https://g.page/r/CS74JMTm3xrWEAE/review";
   var SMS_UNLOCK = "sms:9142631311?body=GOAT";
   var MAIL_BASE = "mailto:sheehanhomestead@gmail.com?subject=" +
     encodeURIComponent("Durbin Crossing prize") + "&body=";
@@ -311,7 +370,7 @@
     {
       id: "thrift-10",
       label: "$10 thrift gift",
-      short: "$10 THRIFT",
+      short: "$10<br>THRIFT",
       value: "Thrift gift credit · $0 fulfill",
       kind: "gift",
       codePrefix: "DC10T",
@@ -320,7 +379,7 @@
     {
       id: "farm-10",
       label: "$10 farm gift",
-      short: "$10 FARM",
+      short: "$10<br>FARM",
       value: "Farm gift credit · $0 fulfill",
       kind: "gift",
       codePrefix: "DC10F",
@@ -329,7 +388,7 @@
     {
       id: "thrift-25",
       label: "$25 thrift gift",
-      short: "$25 THRIFT",
+      short: "$25<br>THRIFT",
       value: "Thrift gift credit · $0 fulfill",
       kind: "gift",
       codePrefix: "DC25T",
@@ -338,7 +397,7 @@
     {
       id: "farm-25",
       label: "$25 farm gift",
-      short: "$25 FARM",
+      short: "$25<br>FARM",
       value: "Farm gift credit · $0 fulfill",
       kind: "gift",
       codePrefix: "DC25F",
@@ -347,7 +406,7 @@
     {
       id: "ticket-25",
       label: "Free $25 ticket",
-      short: "$25 TIX",
+      short: "$25<br>TIX",
       value: "Free $25 ticket · show staff",
       kind: "ticket",
       codePrefix: "DC25X",
@@ -356,7 +415,7 @@
     {
       id: "ticket-50",
       label: "Free $50 ticket",
-      short: "$50 TIX",
+      short: "$50<br>TIX",
       value: "Free $50 ticket · show staff",
       kind: "ticket",
       codePrefix: "DC50X",
@@ -369,12 +428,12 @@
       value: "Critter Gold membership",
       kind: "premium",
       codePrefix: "DCGOLD",
-      fulfill: "Free Critter Gold membership. Show staff this screen to activate."
+      fulfill: "Free Critter Gold membership. Show staff this screen to activate. Only 5 gold statues at this event."
     },
     {
       id: "spin-again",
       label: "Spin again",
-      short: "SPIN AGAIN",
+      short: "SPIN<br>AGAIN",
       value: "Free re-spin · no claim used",
       kind: "again",
       fulfill: "You get another spin! This does not use up a prize claim — still counts toward your max 3 spins."
@@ -531,20 +590,90 @@
       el.className = cls;
       el.style.transform = "rotate(" + deg + "deg)";
       el.innerHTML = "<span" + (flip ? ' style="transform:rotate(180deg)"' : "") + ">" +
-        p.short + (p.kind === "premium" ? "<br>★" : "") + "</span>";
+        p.short + (p.kind === "premium" ? " ★" : "") + "</span>";
       wheel.appendChild(el);
 
       var li = document.createElement("li");
       li.dataset.id = p.id;
+      var extra = p.kind === "premium" ? " · only 5 gold statues at this event" : "";
       li.innerHTML = '<p class="text-xs" style="font-weight:600;margin:0">' + p.label +
-        '</p><p class="text-xs muted" style="margin:0">' + p.value + "</p>";
+        '</p><p class="text-xs muted" style="margin:0">' + p.value + extra + "</p>";
       prizeList.appendChild(li);
     });
   }
 
+  function etParts(d) {
+    var parts = {};
+    try {
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        hour12: false
+      }).formatToParts(d || new Date()).forEach(function (p) {
+        if (p.type !== "literal") parts[p.type] = p.value;
+      });
+    } catch (e) {
+      var x = d || new Date();
+      parts.year = String(x.getFullYear());
+      parts.month = String(x.getMonth() + 1).padStart(2, "0");
+      parts.day = String(x.getDate()).padStart(2, "0");
+      parts.hour = String(x.getHours()).padStart(2, "0");
+    }
+    if (parts.hour === "24") parts.hour = "00";
+    return parts;
+  }
+
+  function isExpired() {
+    var p = etParts(new Date());
+    var y = parseInt(p.year, 10);
+    var m = parseInt(p.month, 10);
+    var d = parseInt(p.day, 10);
+    if (y > EXPIRES_Y) return true;
+    if (y < EXPIRES_Y) return false;
+    if (m > EXPIRES_M) return true;
+    if (m < EXPIRES_M) return false;
+    return d >= EXPIRES_D; /* Sep 29 00:00 ET and after */
+  }
+
+  function countGoldAwards() {
+    try {
+      return parseInt(localStorage.getItem(STORE_GOLD) || "0", 10) || 0;
+    } catch (e) { return 0; }
+  }
+
+  function setGoldAwards(n) {
+    n = Math.max(0, Math.min(99, n | 0));
+    try { localStorage.setItem(STORE_GOLD, String(n)); } catch (e) {}
+    return n;
+  }
+
+  /* Floor counter from premium leads already saved (no double-count with recordGoldAward). */
+  function syncGoldFloorFromLeads() {
+    var leads = readLeads();
+    var fromLeads = 0;
+    for (var i = 0; i < leads.length; i++) {
+      if (leads[i] && leads[i].event_id === EVENT_ID && leads[i].prize_kind === "premium") fromLeads++;
+    }
+    if (fromLeads > countGoldAwards()) setGoldAwards(fromLeads);
+  }
+
+  /* Increment shared Gold award counter (claim form + staff admin bump for SMS unlocks). */
+  function recordGoldAward() {
+    var n = countGoldAwards();
+    if (n < GOLD_CAP) setGoldAwards(n + 1);
+    return countGoldAwards();
+  }
+
+  function goldCapReached() {
+    return countGoldAwards() >= GOLD_CAP;
+  }
+
   function pickIndex() {
-    /* Downweight gold membership (index 6); spin-again (7) stays fun */
-    var weights = [14, 14, 12, 12, 12, 10, 6, 14];
+    /* Majority $10 thrift; scarce gold (hard-capped at GOLD_CAP awards). Indices match PRIZES. */
+    /* thrift-10, farm-10, thrift-25, farm-25, ticket-25, ticket-50, gold, spin-again */
+    var weights = [43, 6, 16, 5, 8, 5, 5, 12];
+    if (goldCapReached()) weights[6] = 0;
     var total = 0;
     for (var i = 0; i < weights.length; i++) total += weights[i];
     var r = Math.random() * total;
@@ -553,7 +682,25 @@
       acc += weights[j];
       if (r < acc) return j;
     }
-    return 0;
+    return 0; /* fallback thrift-10 */
+  }
+
+  function applyExpiryUI() {
+    var ended = isExpired();
+    var endedEl = document.getElementById("ended-banner");
+    var softEl = document.getElementById("soft-expiry");
+    var details = document.getElementById("event-details");
+    var wrap = document.querySelector(".wheel-wrap");
+    if (endedEl) endedEl.hidden = !ended;
+    if (softEl) softEl.hidden = ended;
+    if (ended) {
+      if (wrap) wrap.style.opacity = "0.45";
+      spinBtn.disabled = true;
+      spinBtn.classList.add("is-locked");
+      spinBtn.textContent = "Event ended";
+      if (details) details.style.opacity = "0.85";
+    }
+    return ended;
   }
 
   function targetRotation(index, current) {
@@ -635,6 +782,15 @@
       }
     }
 
+    var reviewPrompt = document.getElementById("review-prompt");
+    var reviewLink = document.getElementById("review-link");
+    if (reviewLink) reviewLink.href = REVIEW_URL;
+    /* Show review after unlock succeeds (claim saved on device) */
+    if (reviewPrompt) {
+      var unlocked = !!(readDevice().unlocked) || !!fromLead;
+      reviewPrompt.hidden = isAgain || !unlocked;
+    }
+
     Array.prototype.forEach.call(prizeList.children, function (li) {
       li.classList.toggle("is-won", li.dataset.id === prize.id);
     });
@@ -691,6 +847,8 @@
     leads.push(lead);
     writeLeads(leads);
 
+    if (pending.kind === "premium") recordGoldAward();
+
     var d = readDevice();
     d.unlocked = true;
     d.leadId = lead.id;
@@ -727,6 +885,12 @@
     refreshSpinUI();
     if (!pending) return;
 
+    /* Safety: if Gold landed but cap already hit, convert to $10 thrift */
+    if (pending.kind === "premium" && goldCapReached()) {
+      pending = PRIZES[0];
+      toast("Gold statues claimed — converted to $10 thrift gift");
+    }
+
     if (pending.kind === "again") {
       pendingCode = null;
       showPrize(pending, null, false);
@@ -741,6 +905,7 @@
 
   spinBtn.addEventListener("click", function () {
     if (spinning) return;
+    if (isExpired()) { toast("Event ended — wheel is closed"); applyExpiryUI(); return; }
     var d = readDevice();
     if (d.unlocked) { toast("Prize claim already saved on this device"); return; }
     if (spinsRemaining() <= 0) { toast("No spins left (max 3)"); return; }
@@ -782,14 +947,25 @@
 
   parseGoat();
   buildLabels();
-  refreshSpinUI();
-  restoreIfUnlocked();
+  syncGoldFloorFromLeads();
+  if (!applyExpiryUI()) {
+    refreshSpinUI();
+    restoreIfUnlocked();
+  } else {
+    spinsLeftEl.textContent = "0";
+  }
 
   window.COC_DC = {
     EVENT_ID: EVENT_ID,
     STORE_LEADS: STORE_LEADS,
+    STORE_GOLD: STORE_GOLD,
+    GOLD_CAP: GOLD_CAP,
     PRIZES: PRIZES,
-    readLeads: readLeads
+    readLeads: readLeads,
+    countGoldAwards: countGoldAwards,
+    setGoldAwards: setGoldAwards,
+    isExpired: isExpired,
+    REVIEW_URL: REVIEW_URL
   };
 })();
 </script>

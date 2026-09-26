@@ -24,3 +24,7 @@
 ## Event details (on-page)
 
 Visible in `.event-details` on `index.html`: Sunday Sep 27 2026 · 10 AM–1 PM · Durbin Crossing · 145 South Durbin Parkway, St Johns FL 32259 · Animal pickup 8:45 AM · Kate Smith / Vesta CDD line.
+
+## Wheel labels (v3 voice)
+
+Scoped under `.dc-wheel`: font ~0.48rem, `span` `top: 0.32rem` (toward rim), width ~2.85rem, two-line shorts (`$10<br>THRIFT`, etc.) so each label stays inside its 45° wedge.
