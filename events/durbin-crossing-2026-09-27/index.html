@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#c9a227" />
-<meta name="description" content="Critters on Call × Durbin Crossing — Sunday Sep 27, 2026 prize wheel. Spin for thrift & farm gifts, farm ticket, Gold membership, Golden Goat statue. St. Johns FL." />
+<meta name="description" content="Critters on Call × Durbin Crossing — Sunday Sep 27, 2026 prize wheel. Spin for thrift & farm gifts, farm ticket, Gold membership, Gold Membership package. St. Johns FL." />
 <meta name="robots" content="noindex, nofollow" />
 <meta property="og:title" content="Spin the Wheel · Critters on Call × Durbin Crossing" />
 <meta property="og:description" content="Event-only prize wheel — Sep 27, 2026. Scan a Golden Goat, spin, claim your prize." />
@@ -144,6 +144,13 @@
     font-size: 0.72rem; color: var(--muted); text-align: center;
     line-height: 1.35; margin: 0 0 0.75rem;
   }
+  .claim-contact-vis {
+    text-align: center; font-size: 0.82rem; line-height: 1.55;
+    color: var(--cream); margin: 0.75rem 0 0;
+  }
+  .claim-contact-vis a {
+    color: var(--card-gold); font-weight: 700; text-decoration: underline;
+  }
   .btn-sms {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 0.15rem; text-decoration: none; text-align: center;
@@ -191,15 +198,15 @@
   .farm-claim .farm-hint {
     font-size: 0.72rem; color: var(--muted); margin-top: 0.4rem; line-height: 1.35;
   }
-  /* Labels fully inside 60° wedges */
+  /* Labels mid-wedge: JS uses i*60° with conic from -30deg (centers 0/60/120/180/240/300) */
   .dc-wheel .wheel-label {
-    font-size: 0.5rem;
+    font-size: 0.48rem;
     letter-spacing: 0.01em;
   }
   .dc-wheel .wheel-label span {
-    top: 0.35rem;
-    width: 3.1rem;
-    max-width: 32%;
+    top: 0.4rem;
+    width: 2.85rem;
+    max-width: 28%;
     line-height: 1.05;
     word-break: break-word;
   }
@@ -216,10 +223,6 @@
   .soft-expiry {
     text-align: center; font-size: 0.72rem; color: var(--muted);
     margin: 0.35rem 0 0; line-height: 1.35;
-  }
-  .gold-scarcity {
-    text-align: center; font-size: 0.72rem; color: var(--card-gold);
-    font-weight: 600; margin: 0.35rem 0 0; line-height: 1.35;
   }
   .review-prompt {
     margin-top: 0.85rem; padding: 0.75rem;
@@ -258,7 +261,6 @@
         <h1 class="event-title">Critters on Call <span>×</span> Durbin Crossing</h1>
         <p class="event-sub">Durbin Crossing — Sun Sep 27 · Scan · spin · claim your prize</p>
         <p class="soft-expiry" id="soft-expiry">Wheel open through Mon Sep 28</p>
-        <p class="gold-scarcity">Only 5 gold statues at this event.</p>
         <div class="ended-banner" id="ended-banner" hidden>
           <strong>Event ended</strong>
           <p>This Durbin Crossing prize wheel closed after Monday, September 28, 2026. Thanks for spinning with Critters on Call.</p>
@@ -290,7 +292,7 @@
       </div>
 
       <button class="btn btn-primary btn-block" type="button" id="spin-btn">Spin the wheel</button>
-      <p class="rules-note">No email needed to spin · max 3 spins · Free spin does not count · Golden Goat statue capped at 5 (only 5 gold statues at this event)</p>
+      <p class="rules-note">No email needed to spin · max 3 spins · Free spin does not count against your 3</p>
 
       <div class="win-card" id="win-card" hidden>
         <p class="tracker-kicker" id="win-kicker">You won</p>
@@ -301,8 +303,8 @@
         <div class="code-box" id="win-code" hidden></div>
         <p class="code-hint" id="win-code-hint" hidden></p>
         <div class="premium-banner" id="premium-banner" hidden>
-          <strong>GRAND PRIZE — Golden Goat statue</strong>
-          <p class="text-xs muted" style="margin-top:0.35rem;line-height:1.4">$100 value · Only 5 gold statues at this event. Come to the farm to pick it up.</p>
+          <strong>GRAND PRIZE — Critters on Call Gold Membership</strong>
+          <p class="text-xs muted" style="margin-top:0.35rem;line-height:1.4">$100 value · $50 membership · $25 farm tour · $25 thrift or farm gift. Come to the farm to claim.</p>
         </div>
         <div class="again-banner" id="again-banner" hidden>
           <strong>Free spin!</strong>
@@ -313,24 +315,13 @@
 
         <div class="claim-panel" id="claim-panel" hidden>
           <h3>Claim your prize</h3>
-          <p class="claim-sub">Email <em>or</em> phone — then come to the farm to pick it up.</p>
-          <form id="claim-form">
-            <div class="field">
-              <label for="gate-email">Email</label>
-              <input id="gate-email" name="email" type="email" autocomplete="email" placeholder="you@email.com" />
-            </div>
-            <p class="field-or">— OR —</p>
-            <div class="field">
-              <label for="gate-phone">Phone</label>
-              <input id="gate-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(904) 555-0100" />
-            </div>
-            <p class="field-error" id="gate-error" role="alert"></p>
-            <button class="btn btn-primary btn-block" type="submit" id="claim-submit" style="margin-top:0.65rem">Save &amp; claim</button>
-          </form>
-          <details class="secondary-unlock" id="secondary-unlock">
-            <summary>Or unlock via text / email</summary>
-            <div class="cta-row" id="unlock-ctas" style="margin-top:0.65rem"></div>
-          </details>
+          <p class="claim-sub">Tap email or text to message us with your prize — then come to the farm. This page does <strong>not</strong> save claims by itself.</p>
+          <div class="cta-row" id="claim-contact-row"></div>
+          <p class="claim-contact-vis" id="claim-contact-vis">
+            Email: <a id="claim-mail-link" href="mailto:sheehanhomestead@gmail.com">sheehanhomestead@gmail.com</a><br />
+            Text: <a id="claim-sms-link" href="sms:9142631311">914-263-1311</a>
+          </p>
+          <p class="claim-honest text-xs muted" style="text-align:center;margin:0.65rem 0 0;line-height:1.35">Show this screen at the farm. Staff confirm by your message or code — not by anything stored in the browser alone.</p>
         </div>
 
         <div class="farm-claim" id="farm-claim" hidden>
@@ -354,7 +345,7 @@
         Wheel hub: Critters on Call text (no Sheehan Homestead logo in center).
         Event-only · not Durbin Crossing or Vesta official marks.
       </p>
-      <p class="admin-link"><a href="admin.html">Staff lead export</a> · <a href="OUTLINE.md">CRM outline</a> · <a href="QR-STICKERS.md">Goat QR list</a> · <a href="BRANDING.md">Branding</a></p>
+      <p class="admin-link"><a href="admin.html">Staff tools</a> · <a href="OUTLINE.md">CRM outline</a> · <a href="QR-STICKERS.md">Goat QR list</a> · <a href="BRANDING.md">Branding</a></p>
     </div>
   </main>
 </div>
@@ -369,21 +360,20 @@
   var EVENT_DATE = "2026-09-27";
   var EVENT_LABEL = "Sunday, September 27, 2026";
   var MAX_SPINS = 3;
-  var STATUE_CAP = 5;
   /* End of Mon Sep 28 night = start of Tue Sep 29 America/New_York */
   var EXPIRES_Y = 2026;
   var EXPIRES_M = 9;
   var EXPIRES_D = 29;
   var STORE_LEADS = "coc_dc_leads_v1";
   var STORE_DEVICE = "coc_dc_device_v2_" + EVENT_ID;
-  var STORE_STATUE = "coc_dc_gold_awards_v1_" + EVENT_ID; /* keep key; now = Golden Goat statue awards */
+  var STORE_STATUE = "coc_dc_gold_awards_v1_" + EVENT_ID; /* legacy key; grand prize no longer capped */
   var STORE_IDENTITY = "coc_dc_identity_spins_v1_" + EVENT_ID;
   var FB_URL = "https://www.facebook.com/profile.php?id=61556795506312";
   var REVIEW_URL = "https://g.page/r/CS74JMTm3xrWEAE/review";
   var FARM_ADDRESS = "44065 Cushman Road, Callahan, FL 32011";
-  var SMS_UNLOCK = "sms:9142631311?body=GOAT";
-  var MAIL_BASE = "mailto:sheehanhomestead@gmail.com?subject=" +
-    encodeURIComponent("Durbin Crossing prize") + "&body=";
+  var CLAIM_EMAIL = "sheehanhomestead@gmail.com";
+  var CLAIM_SMS = "9142631311";
+  var CLAIM_SMS_DISPLAY = "914-263-1311";
   var WEBHOOK_STUB = "";
 
   /* 6 segments — equal 60° wedges; weights can vary */
@@ -409,14 +399,14 @@
       fulfill: "Show this code for a $10 farm gift. Event-only · Durbin Crossing Sep 27 2026."
     },
     {
-      id: "statue",
-      label: "Golden Goat statue",
-      short: "GOAT<br>STATUE",
+      id: "gold-pkg",
+      label: "Critters on Call Gold Membership",
+      short: "GOLD<br>CARD",
       value: "GRAND PRIZE — $100 value",
-      teaser: "the statue everyone keeps",
-      kind: "statue",
-      codePrefix: "DCSTAT",
-      fulfill: "Golden Goat statue · $100 value. Only 5 gold statues at this event. Come to the farm to claim."
+      teaser: "$50 membership · $25 farm tour · $25 thrift or farm gift",
+      kind: "grand",
+      codePrefix: "DCGPKG",
+      fulfill: "Critters on Call Gold Membership · $100 value. $50 membership · $25 farm tour · $25 thrift or farm gift. Come to the farm to claim."
     },
     {
       id: "gold-membership",
@@ -449,7 +439,7 @@
     }
   ];
 
-  /* Weights sum 100. Indices match PRIZES. Statue hard-capped separately. */
+  /* Weights sum 100. Indices match PRIZES. Grand prize uncapped. */
   var WEIGHTS = [35, 20, 8, 10, 15, 12];
 
   var slice = 360 / PRIZES.length;
@@ -476,12 +466,10 @@
   var againBanner = document.getElementById("again-banner");
   var claimPanel = document.getElementById("claim-panel");
   var claimCtaRow = document.getElementById("claim-cta-row");
-  var unlockCtas = document.getElementById("unlock-ctas");
+  var claimContactRow = document.getElementById("claim-contact-row");
   var winCtas = document.getElementById("win-ctas");
   var farmClaim = document.getElementById("farm-claim");
   var prizeList = document.getElementById("prize-list");
-  var claimForm = document.getElementById("claim-form");
-  var gateError = document.getElementById("gate-error");
   var toastEl = document.getElementById("toast");
   var goatChip = document.getElementById("goat-chip");
 
@@ -618,12 +606,14 @@
   }
 
   function buildLabels() {
+    /* Mid-wedge: conic from -30deg → centers at i*60 (0,60,120,180,240,300).
+       Old math used i*60+30 which sat on color boundaries. */
     PRIZES.forEach(function (p, i) {
-      var deg = i * slice + slice / 2;
+      var deg = i * slice; /* offset 0° vs former +30° boundary placement */
       var flip = deg > 90 && deg < 270;
       var el = document.createElement("span");
       var cls = "wheel-label ";
-      if (p.kind === "statue") cls += "is-premium";
+      if (p.kind === "grand") cls += "is-premium";
       else if (p.kind === "membership") cls += "is-membership";
       else if (p.kind === "gift") cls += "is-gift";
       else if (p.kind === "again") cls += "is-again";
@@ -631,15 +621,14 @@
       el.className = cls;
       el.style.transform = "rotate(" + deg + "deg)";
       el.innerHTML = "<span" + (flip ? ' style="transform:rotate(180deg)"' : "") + ">" +
-        p.short + (p.kind === "statue" ? " ★" : "") + "</span>";
+        p.short + (p.kind === "grand" ? " ★" : "") + "</span>";
       wheel.appendChild(el);
 
       var li = document.createElement("li");
       li.dataset.id = p.id;
-      var extra = p.kind === "statue" ? " · only 5 gold statues at this event" : "";
       var teaser = p.teaser ? '<p class="text-xs muted teaser" style="margin:0.15rem 0 0">' + p.teaser + "</p>" : "";
       li.innerHTML = '<p class="text-xs" style="font-weight:600;margin:0">' + p.label +
-        '</p><p class="text-xs muted" style="margin:0">' + p.value + extra + "</p>" + teaser;
+        '</p><p class="text-xs muted" style="margin:0">' + p.value + "</p>" + teaser;
       prizeList.appendChild(li);
     });
   }
@@ -678,40 +667,8 @@
     return d >= EXPIRES_D;
   }
 
-  function countStatueAwards() {
-    try {
-      return parseInt(localStorage.getItem(STORE_STATUE) || "0", 10) || 0;
-    } catch (e) { return 0; }
-  }
-
-  function setStatueAwards(n) {
-    n = Math.max(0, Math.min(99, n | 0));
-    try { localStorage.setItem(STORE_STATUE, String(n)); } catch (e) {}
-    return n;
-  }
-
-  function syncStatueFloorFromLeads() {
-    var leads = readLeads();
-    var fromLeads = 0;
-    for (var i = 0; i < leads.length; i++) {
-      if (leads[i] && leads[i].event_id === EVENT_ID && leads[i].prize_kind === "statue") fromLeads++;
-    }
-    if (fromLeads > countStatueAwards()) setStatueAwards(fromLeads);
-  }
-
-  function recordStatueAward() {
-    var n = countStatueAwards();
-    if (n < STATUE_CAP) setStatueAwards(n + 1);
-    return countStatueAwards();
-  }
-
-  function statueCapReached() {
-    return countStatueAwards() >= STATUE_CAP;
-  }
-
   function pickIndex() {
     var weights = WEIGHTS.slice();
-    if (statueCapReached()) weights[2] = 0; /* statue index */
     var total = 0;
     for (var i = 0; i < weights.length; i++) total += weights[i];
     var r = Math.random() * total;
@@ -742,7 +699,8 @@
   }
 
   function targetRotation(index, current) {
-    var center = index * slice + slice / 2;
+    /* Mid-wedge under pointer: matches buildLabels (i*slice) with conic from -30deg */
+    var center = index * slice;
     var normalized = ((current % 360) + 360) % 360;
     var needed = ((360 - center) % 360 - normalized + 360) % 360;
     var spins = 5 + Math.floor(Math.random() * 3);
@@ -761,26 +719,53 @@
     } catch (e) {}
   }
 
-  function mailHref(prizeLabel, code) {
-    var body = "Prize: " + prizeLabel;
+  function claimMailHref(prizeLabel, code) {
+    var subject = "Durbin Crossing prize — " + prizeLabel;
+    var body = "Hi Critters on Call —\n\nI spun the Durbin Crossing wheel and won:\n" + prizeLabel;
     if (code) body += "\nCode: " + code;
     if (goatId) body += "\nGoat sticker: #" + goatId;
     body += "\nEvent: Durbin Crossing " + EVENT_DATE;
-    body += "\nFarm claim: " + FARM_ADDRESS;
-    return MAIL_BASE + encodeURIComponent(body);
+    body += "\nFarm claim: " + FARM_ADDRESS + "\n";
+    return "mailto:" + CLAIM_EMAIL +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
   }
 
-  function openClaimForm() {
+  function claimSmsHref(prizeLabel) {
+    var body = "Durbin prize: " + prizeLabel;
+    return "sms:" + CLAIM_SMS + "?body=" + encodeURIComponent(body);
+  }
+
+  function fillClaimContacts() {
+    var label = pending ? pending.label : "prize";
+    var mail = claimMailHref(label, pendingCode);
+    var sms = claimSmsHref(label);
+    if (claimContactRow) {
+      claimContactRow.innerHTML =
+        '<a class="btn-mail btn-block" href="' + mail + '" id="claim-mail-cta">Email ' + CLAIM_EMAIL + '</a>' +
+        '<a class="btn-sms" href="' + sms + '" id="claim-sms-cta">' +
+          '<span>Text ' + CLAIM_SMS_DISPLAY + '</span>' +
+          '<small>Opens SMS with your prize name</small>' +
+        '</a>';
+    }
+    var mailLink = document.getElementById("claim-mail-link");
+    var smsLink = document.getElementById("claim-sms-link");
+    if (mailLink) mailLink.href = mail;
+    if (smsLink) smsLink.href = sms;
+  }
+
+  function openClaimContacts() {
     claimFormOpen = true;
+    pendingClaimed = true;
     claimPanel.hidden = false;
     claimCtaRow.innerHTML = "";
-    if (gateError) gateError.textContent = "";
-    unlockCtas.innerHTML =
-      '<a class="btn-sms" href="' + SMS_UNLOCK + '">' +
-        '<span>Text GOAT to 914</span>' +
-        '<small>914-263-1311</small>' +
-      '</a>' +
-      '<a class="btn-mail" href="' + mailHref(pending ? pending.label : "", pendingCode) + '">Email us</a>';
+    fillClaimContacts();
+    if (farmClaim) farmClaim.hidden = false;
+    var reviewPrompt = document.getElementById("review-prompt");
+    var reviewLink = document.getElementById("review-link");
+    if (reviewLink) reviewLink.href = REVIEW_URL;
+    if (reviewPrompt) reviewPrompt.hidden = false;
+    toast("Email or text us — then come to the farm");
   }
 
   function showPrize(prize, code, claimed) {
@@ -791,9 +776,9 @@
     winCard.hidden = false;
 
     var isAgain = prize.kind === "again";
-    var isStatue = prize.kind === "statue";
+    var isGrand = prize.kind === "grand";
     document.getElementById("win-kicker").textContent =
-      isAgain ? "Lucky wedge" : (isStatue ? "GRAND PRIZE" : "You won");
+      isAgain ? "Lucky wedge" : (isGrand ? "GRAND PRIZE" : "You won");
     winLabel.textContent = prize.label;
     winValue.textContent = prize.value;
     winTeaser.textContent = prize.teaser || "";
@@ -810,18 +795,26 @@
       winCodeHint.hidden = true;
     }
 
-    premiumBanner.hidden = !isStatue;
+    premiumBanner.hidden = !isGrand;
     againBanner.hidden = !isAgain;
 
-    claimPanel.hidden = true;
-    farmClaim.hidden = !(claimed && !isAgain);
     claimCtaRow.innerHTML = "";
     winCtas.innerHTML = "";
 
     var reviewPrompt = document.getElementById("review-prompt");
     var reviewLink = document.getElementById("review-link");
     if (reviewLink) reviewLink.href = REVIEW_URL;
-    if (reviewPrompt) reviewPrompt.hidden = !(claimed && !isAgain);
+
+    if (claimed && !isAgain) {
+      claimPanel.hidden = false;
+      fillClaimContacts();
+      farmClaim.hidden = false;
+      if (reviewPrompt) reviewPrompt.hidden = false;
+    } else {
+      claimPanel.hidden = true;
+      farmClaim.hidden = true;
+      if (reviewPrompt) reviewPrompt.hidden = true;
+    }
 
     if (isAgain) {
       var left = spinsRemaining();
@@ -834,7 +827,7 @@
     } else if (!claimed) {
       claimCtaRow.innerHTML =
         '<button class="btn btn-primary btn-block" type="button" id="open-claim-btn">Claim your prize</button>';
-      document.getElementById("open-claim-btn").addEventListener("click", openClaimForm);
+      document.getElementById("open-claim-btn").addEventListener("click", openClaimContacts);
       var left2 = spinsRemaining();
       if (left2 > 0) {
         winCtas.innerHTML = '<button class="btn btn-outline btn-block" type="button" id="spin-more-cta">Spin again (' + left2 + ' left)</button>';
@@ -860,97 +853,9 @@
     toast(prize.label);
   }
 
-  function saveClaim(email, phone) {
-    var e = normEmail(email);
-    var p = normPhone(phone);
-    var hasEmail = e && e.indexOf("@") >= 1;
-    var hasPhone = p.length >= 10;
-
-    if (!hasEmail && !hasPhone) {
-      gateError.textContent = "Enter an email or a 10-digit phone.";
-      return false;
-    }
-    if (email && email.trim() && !hasEmail) {
-      gateError.textContent = "Enter a valid email, or clear it and use phone.";
-      return false;
-    }
-    if (phone && phone.trim() && !hasPhone) {
-      gateError.textContent = "Enter a valid 10-digit US phone, or clear it and use email.";
-      return false;
-    }
-
-    if (!pending || pending.kind === "again") {
-      gateError.textContent = "Spin a prize first, then claim.";
-      return false;
-    }
-
-    var idSpins = getIdentitySpins(hasEmail ? e : null, hasPhone ? p : null);
-    var d = readDevice();
-    var deviceSpins = d.spins || 0;
-    var bound = Math.max(idSpins, deviceSpins);
-    if (bound > MAX_SPINS) {
-      gateError.textContent = "This contact already used the max 3 spins for this event.";
-      return false;
-    }
-
-    var code = pendingCode || (pending.codePrefix ? makeCode(pending.codePrefix) : makeCode("DCVX"));
-    if (pending.kind === "statue") code = "STATUE-" + (goatId || "XX") + "-" + code.slice(-4);
-    if (pending.kind === "membership") code = "GOLD-" + (goatId || "XX") + "-" + code.slice(-4);
-    pendingCode = code;
-
-    var lead = {
-      id: "L-" + Date.now().toString(36) + "-" + Math.floor(Math.random() * 1e4),
-      event_id: EVENT_ID,
-      event_date: EVENT_DATE,
-      event_label: EVENT_LABEL,
-      email: hasEmail ? e : "",
-      email_norm: hasEmail ? e : "",
-      phone: hasPhone ? String(phone).trim() : "",
-      phone_norm: hasPhone ? p : "",
-      prize_id: pending.id,
-      prize_label: pending.label,
-      prize_kind: pending.kind,
-      code: code,
-      goat_id: goatId || null,
-      spins_at_claim: bound,
-      timestamp: new Date().toISOString(),
-      user_agent: (navigator.userAgent || "").slice(0, 160)
-    };
-
-    var leads = readLeads();
-    leads.push(lead);
-    writeLeads(leads);
-
-    if (pending.kind === "statue") recordStatueAward();
-
-    /* Bind device remaining spins to this email/phone */
-    setIdentitySpins(hasEmail ? e : null, hasPhone ? p : null, bound);
-    d.spins = bound;
-    d.email_norm = hasEmail ? e : (d.email_norm || null);
-    d.phone_norm = hasPhone ? p : (d.phone_norm || null);
-    d.lastLeadId = lead.id;
-    writeDevice(d);
-
-    postWebhookStub(lead);
-    showPrize(pending, code, true);
-    toast("Claim saved — come to the farm");
-    return true;
-  }
 
   function restoreLastClaim() {
-    var d = readDevice();
-    if (!d.lastLeadId) return;
-    var leads = readLeads();
-    for (var i = 0; i < leads.length; i++) {
-      if (leads[i] && leads[i].id === d.lastLeadId) {
-        var prize = null;
-        for (var j = 0; j < PRIZES.length; j++) {
-          if (PRIZES[j].id === leads[i].prize_id) { prize = PRIZES[j]; break; }
-        }
-        if (prize) showPrize(prize, leads[i].code, true);
-        return;
-      }
-    }
+    /* Claims are via email/SMS to staff — browser storage is not a verified claim. */
   }
 
   function finishSpin() {
@@ -970,12 +875,6 @@
 
     refreshSpinUI();
 
-    /* Safety: if statue landed but cap already hit, convert to $10 thrift */
-    if (pending.kind === "statue" && statueCapReached()) {
-      pending = PRIZES[0];
-      toast("Gold statues claimed — converted to $10 thrift gift");
-    }
-
     if (pending.kind === "again") {
       pendingCode = null;
       showPrize(pending, null, false);
@@ -983,7 +882,7 @@
     }
 
     var code = pending.codePrefix ? makeCode(pending.codePrefix) : makeCode("DCVX");
-    if (pending.kind === "statue") code = "STATUE-" + (goatId || "XX") + "-" + code.slice(-4);
+    if (pending.kind === "grand") code = "GPKG-" + (goatId || "XX") + "-" + code.slice(-4);
     if (pending.kind === "membership") code = "GOLD-" + (goatId || "XX") + "-" + code.slice(-4);
     pendingCode = code;
     showPrize(pending, code, false);
@@ -1007,7 +906,7 @@
     wheel.classList.add("is-spinning");
 
     if (reduceMotion) {
-      var needed = ((360 - (index * slice + slice / 2)) - (rotation % 360) + 360) % 360;
+      var needed = ((360 - (index * slice)) - (rotation % 360) + 360) % 360;
       rotation = rotation + needed;
       wheel.style.transition = "none";
       wheel.style.transform = "rotate(" + rotation + "deg)";
@@ -1024,17 +923,8 @@
     if (e.target === wheel && spinning) finishSpin();
   });
 
-  claimForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    saveClaim(
-      document.getElementById("gate-email").value,
-      document.getElementById("gate-phone").value
-    );
-  });
-
   parseGoat();
   buildLabels();
-  syncStatueFloorFromLeads();
   if (!applyExpiryUI()) {
     refreshSpinUI();
     restoreLastClaim();
@@ -1046,16 +936,9 @@
     EVENT_ID: EVENT_ID,
     STORE_LEADS: STORE_LEADS,
     STORE_STATUE: STORE_STATUE,
-    STORE_GOLD: STORE_STATUE,
-    STATUE_CAP: STATUE_CAP,
-    GOLD_CAP: STATUE_CAP,
     WEIGHTS: WEIGHTS,
     PRIZES: PRIZES,
     readLeads: readLeads,
-    countStatueAwards: countStatueAwards,
-    countGoldAwards: countStatueAwards,
-    setStatueAwards: setStatueAwards,
-    setGoldAwards: setStatueAwards,
     isExpired: isExpired,
     REVIEW_URL: REVIEW_URL,
     FARM_ADDRESS: FARM_ADDRESS

@@ -57,15 +57,9 @@
         <a class="btn btn-ghost" href="index.html">← Wheel</a>
       </div>
       <div class="stub">
-        <strong style="color:var(--gold)">Golden Goat statues · <span id="gold-count">0</span> / 5</strong><br />
-        Shared counter key <code>coc_dc_gold_awards_v1_durbin-crossing-2026-09-27</code> (same browser as wheel).
-        Claim form auto-increments on statue claims; for Text GOAT unlocks, tap <strong>+1 statue claimed</strong> when you hand out a statue.
-        At 5, the wheel re-weights statue to 0 and converts any statue landing to $10 thrift.
-        <strong>Gold membership is uncapped</strong> (only the physical statue is capped at 5).
-        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.65rem">
-          <button class="btn btn-primary" type="button" id="btn-gold-plus">+1 statue claimed</button>
-          <button class="btn btn-outline" type="button" id="btn-gold-minus">−1</button>
-        </div>
+        <strong style="color:var(--gold)">Grand prize uncapped</strong><br />
+        Grand prize is <strong>Critters on Call Gold Membership</strong> ($100 · $50 membership · $25 farm tour · $25 thrift or farm gift).
+        No hard cap — same as the separate Gold membership wedge. Legacy counter key <code>coc_dc_gold_awards_v1_…</code> is unused by the live wheel.
       </div>
       <div class="stub">
         <strong style="color:var(--gold)">Webhook / Apps Script stub</strong><br />
@@ -91,39 +85,14 @@
 <script>
 (function () {
   var STORE = "coc_dc_leads_v1";
-  var STORE_GOLD = "coc_dc_gold_awards_v1_durbin-crossing-2026-09-27";
   var EVENT = "durbin-crossing-2026-09-27";
   var PIN = "0927";
-  var STATUE_CAP = 5;
 
   function readLeads() {
     try {
       var arr = JSON.parse(localStorage.getItem(STORE) || "[]");
       return Array.isArray(arr) ? arr.filter(function (L) { return L && L.event_id === EVENT; }) : [];
     } catch (e) { return []; }
-  }
-
-  function countGold() {
-    try { return parseInt(localStorage.getItem(STORE_GOLD) || "0", 10) || 0; } catch (e) { return 0; }
-  }
-
-  function setGold(n) {
-    n = Math.max(0, Math.min(99, n | 0));
-    try { localStorage.setItem(STORE_GOLD, String(n)); } catch (e) {}
-    refreshGold();
-  }
-
-  function syncGoldFloorFromLeads() {
-    var fromLeads = readLeads().filter(function (L) { return L.prize_kind === "statue"; }).length;
-    if (fromLeads > countGold()) {
-      try { localStorage.setItem(STORE_GOLD, String(fromLeads)); } catch (e) {}
-    }
-  }
-
-  function refreshGold() {
-    syncGoldFloorFromLeads();
-    var el = document.getElementById("gold-count");
-    if (el) el.textContent = String(countGold());
   }
 
   function toET(iso) {
@@ -156,7 +125,6 @@
         "<td>" + (L.phone || "") + "</td>";
       tb.appendChild(tr);
     });
-    refreshGold();
   }
 
   function downloadCsv() {
@@ -200,15 +168,7 @@
     }
   });
   document.getElementById("btn-csv").addEventListener("click", downloadCsv);
-  document.getElementById("btn-refresh").addEventListener("click", function () { render(); mailtoStub(); refreshGold(); });
-  document.getElementById("btn-gold-plus").addEventListener("click", function () {
-    var n = countGold();
-    if (n >= STATUE_CAP) { alert("Already at cap (" + STATUE_CAP + ")"); refreshGold(); return; }
-    setGold(n + 1);
-  });
-  document.getElementById("btn-gold-minus").addEventListener("click", function () {
-    setGold(Math.max(0, countGold() - 1));
-  });
+  document.getElementById("btn-refresh").addEventListener("click", function () { render(); mailtoStub(); });
 })();
 </script>
 </body>
