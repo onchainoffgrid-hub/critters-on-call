@@ -16,10 +16,11 @@ Captured fields (v1 localStorage → CSV / mailto / optional webhook):
 2. Tag every row in CRM / sheet: `source=durbin-crossing-wheel`, `event_date=2026-09-27`, `goat_id`, `prize`.
 3. Deduplicate on email **and** phone (wheel already blocks double unlock; still clean merges).
 4. Fulfill queue by prize kind:
-   - **gift-10 / gift-25** — honor digital codes (`DC10-*` / `DC25-*`) at Visit Us; no paid merch.
-   - **premium-goat** — activate free Critter/Gold Club-style membership + confirm Golden Goat statue handed out (match `goat_id`).
-   - **vouchers** (Mommy & Me, car pass, goat yoga, stickers) — calendar / claim list; $0 fulfill.
-   - **high-five / social** — soft nurture; confirm FB follow CTA landed.
+   - **thrift-10 / farm-10 / thrift-25 / farm-25** — honor codes (`DC10T-*` / `DC10F-*` / `DC25T-*` / `DC25F-*`) at thrift or farm redeem.
+   - **ticket-25 / ticket-50** — free $25 / $50 ticket; show screen to staff (do not advertise what for on the wheel).
+   - **gold-membership** — activate Critter Gold; show staff screen (`GOLD-*` codes).
+   - **spin-again** — no claim / no lead required; still counts as a spin toward max 3.
+   - Unlock CTAs: SMS `GOAT` → 914-263-1311 or mailto sheehanhomestead@gmail.com (optional email+phone lead store).
 
 ### Warming sequence (suggested, not built)
 | Day | Channel | Intent |

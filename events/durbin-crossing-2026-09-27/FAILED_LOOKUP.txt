@@ -1,0 +1,11 @@
+FAILED LOOKUP — $6.99 / 2-hour consumer mobile petting zoo product URL
+Date: 2026-09-26 (ET)
+
+Searched:
+- sheehanhomestead.com (WebSearch + WebFetch /services, booking-help, home, about)
+- Workspace repo / collateral (consumer-menu, b2c catalogues, share sheets) — no $6.99 consumer mobile SKU URL
+- Google Drive (fullText / title for 6.99, 2-hour, consumer mobile) — pricing docs found, no public product checkout URL for $6.99 2-hour mobile
+
+Result: No exact public product URL found.
+Fallback used for qr-mobile-699.png: https://sheehanhomestead.com/services
+Filename note: qr-mobile-699.png still encodes the services URL (not a fake product path).
