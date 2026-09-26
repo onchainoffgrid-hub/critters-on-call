@@ -18,6 +18,12 @@ http://localhost:8766/
 - **Wheel:** https://onchainoffgrid-hub.github.io/critters-on-call/wheel.html
 - **Gold:** https://onchainoffgrid-hub.github.io/critters-on-call/gold.html
 
+## Durbin Crossing event wheel (Sep 27, 2026)
+- **Live:** https://onchainoffgrid-hub.github.io/critters-on-call/events/durbin-crossing-2026-09-27/
+- Goat QRs: `?goat=01` … `?goat=12` — see `events/durbin-crossing-2026-09-27/QR-STICKERS.md`
+- Staff CSV: `events/durbin-crossing-2026-09-27/admin.html` (PIN 0927)
+- Outline (CRM + mom app): `events/durbin-crossing-2026-09-27/OUTLINE.md`
+
 ## Prize wheel (“How Sweet It Is”)
 Eight slices: spin-again (Priceless) ×2 · Gold Membership ($50) ×2 · free farm gift ($25) · free thrift gift ($25) · free farm tour ($25) · Gold Pro nomination ($299).
 
