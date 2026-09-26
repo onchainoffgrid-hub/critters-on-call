@@ -16,20 +16,21 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../../css/styles.css" />
 <style>
-  /* Gold-card / membership aesthetic — greens from gold-card-brochure (NOT hen logo; hen is B&W/gold only) */
+  /* Forest greens sampled from wife chicken-in-circle logo (Homestead Logo Circle.png) — NOT website leaf, NOT gold-card */
   :root {
-    --forest: #2F4F3E;   /* gold-card --accent */
-    --sage: #4F6559;     /* gold-card --sage */
+    --forest: #4C6458;   /* dominant fill from Homestead Logo Circle.png */
+    --forest-deep: #3A4F45; /* darker companion for alternating segments */
+    --sage: #5A7366;     /* lighter companion */
     --card-gold: #c9a227;
     --gold-deep: #B8923A;
     --cream: #F3EEE4;
-    --leaf: #2F4F3E; /* override old wheel leaf #3d6b4f */
+    --leaf: #4C6458;
   }
   .main { padding-bottom: calc(2rem + var(--safe-b)); }
   .event-badge {
     display: inline-flex; align-items: center; gap: 0.4rem;
-    border-radius: 999px; border: 1px solid rgba(47,79,62,0.45);
-    background: rgba(47,79,62,0.35); color: #e8efe9;
+    border-radius: 999px; border: 1px solid rgba(76,100,88,0.55);
+    background: rgba(76,100,88,0.4); color: #e8efe9;
     font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
     text-transform: uppercase; padding: 0.35rem 0.75rem;
   }
@@ -39,9 +40,30 @@
   }
   .event-title span { color: var(--card-gold); }
   .event-sub { text-align: center; font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
-  .hen-mark {
-    display: block; margin: 0.55rem auto 0; width: 52px; height: auto;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
+  .event-details {
+    margin: 0.75rem auto 0; max-width: 22rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: 0.85rem;
+    border: 1px solid rgba(201,162,39,0.4);
+    background: rgba(58,79,69,0.45);
+    text-align: center; font-size: 0.78rem; line-height: 1.45; color: #e8efe9;
+  }
+  .event-details strong { color: var(--card-gold); font-weight: 700; }
+  .event-details .addr { margin-top: 0.35rem; color: var(--cream); }
+  .event-details .pickup { margin-top: 0.35rem; font-weight: 600; color: #F3EEE4; }
+  .event-details .host { margin-top: 0.4rem; font-size: 0.7rem; color: var(--muted); }
+  .wheel-hub-brand {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 0.35rem; line-height: 1.1;
+    font-family: var(--display); font-weight: 700; color: var(--card-gold);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+    pointer-events: none; user-select: none;
+  }
+  .wheel-hub-brand .hub-top { font-size: 0.62rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.95; }
+  .wheel-hub-brand .hub-mid { font-size: 0.78rem; letter-spacing: 0.02em; margin-top: 0.1rem; }
+  .dc-wheel .wheel-hub {
+    background: linear-gradient(160deg, #1a241c, #3A4F45);
+    border-color: var(--card-gold);
   }
   .goat-chip {
     text-align: center; font-size: 0.75rem; font-weight: 600; color: var(--card-gold);
@@ -56,16 +78,16 @@
     background: conic-gradient(
       from -22.5deg,
       #c9a227 0deg 45deg,
-      #2F4F3E 45deg 90deg,
+      #4C6458 45deg 90deg,
       #B8923A 90deg 135deg,
-      #4F6559 135deg 180deg,
+      #3A4F45 135deg 180deg,
       #c9a227 180deg 225deg,
-      #2F4F3E 225deg 270deg,
+      #5A7366 225deg 270deg,
       #E8D48C 270deg 315deg,
       #1a241c 315deg 360deg
     );
     box-shadow:
-      0 0 0 3px rgba(47,79,62,0.55),
+      0 0 0 3px rgba(76,100,88,0.6),
       0 0 28px rgba(201,162,39,0.35),
       inset 0 0 0 2px rgba(0,0,0,0.35);
   }
@@ -122,7 +144,7 @@
     margin-top: 0.85rem; padding: 0.9rem;
     border-radius: 0.9rem;
     border: 2px solid rgba(201,162,39,0.55);
-    background: linear-gradient(160deg, rgba(47,79,62,0.45), rgba(26,36,28,0.9));
+    background: linear-gradient(160deg, rgba(76,100,88,0.5), rgba(26,36,28,0.9));
   }
   .unlock-panel h3 {
     font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.35rem;
@@ -145,7 +167,7 @@
   }
   .btn-mail {
     display: block; text-align: center; text-decoration: none;
-    background: rgba(79,101,89,0.55); color: #F3EEE4 !important;
+    background: rgba(90,115,102,0.55); color: #F3EEE4 !important;
     font-weight: 700; font-size: 1rem; padding: 0.85rem;
     border-radius: 0.75rem; border: 1px solid rgba(201,162,39,0.35);
   }
@@ -160,7 +182,7 @@
   .optional-lead summary::-webkit-details-marker { display: none; }
   .again-banner {
     border-radius: 0.85rem; border: 2px dashed rgba(201,162,39,0.55);
-    background: rgba(47,79,62,0.35); padding: 0.85rem; text-align: center; margin-top: 0.5rem;
+    background: rgba(76,100,88,0.4); padding: 0.85rem; text-align: center; margin-top: 0.5rem;
   }
   .again-banner strong { color: var(--card-gold); }
 </style>
@@ -185,16 +207,24 @@
       <div style="text-align:center">
         <p class="tracker-kicker" style="margin:0">Event-only prize wheel</p>
         <h1 class="event-title">Critters on Call <span>×</span> Durbin Crossing</h1>
-        <img class="hen-mark" src="hen-mark-gold.png" alt="Sheehan Homestead hen mark" width="52" height="46" />
-        <p class="event-sub">Sunday, September 27, 2026 · St. Johns, FL<br />Scan a Golden Goat · spin · unlock your prize</p>
+        <p class="event-sub">Scan a Golden Goat · spin · unlock your prize</p>
+        <div class="event-details" id="event-details">
+          <strong>Sunday, September 27, 2026</strong> · 10 AM – 1 PM<br />
+          <span class="addr">Durbin Crossing · 145 South Durbin Parkway<br />St Johns, FL 32259</span>
+          <p class="pickup">Animal pickup 8:45 AM</p>
+          <p class="host">Kate Smith / Vesta CDD · Critters on Call event wheel</p>
+        </div>
         <p class="goat-chip" id="goat-chip" hidden></p>
       </div>
 
       <div class="wheel-wrap">
         <div class="wheel-pointer" aria-hidden="true">▼</div>
         <div class="prize-wheel dc-wheel" id="prize-wheel" style="transform:rotate(0deg)">
-          <span class="wheel-hub">
-            <img src="hen-mark-gold.png" alt="" width="56" height="50" />
+          <span class="wheel-hub" aria-label="Critters on Call">
+            <span class="wheel-hub-brand">
+              <span class="hub-top">Critters</span>
+              <span class="hub-mid">on Call</span>
+            </span>
           </span>
         </div>
       </div>
@@ -248,8 +278,8 @@
       <ul class="prize-list" id="prize-list"></ul>
 
       <p class="text-xs muted" style="text-align:center;line-height:1.4;margin:0">
-        Branding: gold-card membership aesthetic · forest <code>#2F4F3E</code> · sage <code>#4F6559</code> · gold <code>#c9a227</code>.
-        Hen mark is monochrome/gold (no green in source). Greens from gold-card collateral — not website leaf <code>#3d6b4f</code>.
+        Branding: forest <code>#4C6458</code> from Homestead Logo Circle (wife chicken logo) · deep <code>#3A4F45</code> · sage <code>#5A7366</code> · gold <code>#c9a227</code>.
+        Wheel hub: Critters on Call text (no Sheehan Homestead logo in center).
         Event-only · not Durbin Crossing or Vesta official marks.
       </p>
       <p class="admin-link"><a href="admin.html">Staff lead export</a> · <a href="OUTLINE.md">CRM outline</a> · <a href="QR-STICKERS.md">Goat QR list</a> · <a href="BRANDING.md">Branding</a></p>

@@ -1,8 +1,10 @@
 # Critters on Call × Durbin Crossing — prize wheel
 
-**Event date:** Sunday, September 27, 2026  
+**Event date:** Sunday, September 27, 2026 · 10 AM – 1 PM  
+**Location:** Durbin Crossing · 145 South Durbin Parkway, St Johns, FL 32259  
+**Animal pickup:** 8:45 AM · Kate Smith / Vesta CDD  
 **Event ID:** `durbin-crossing-2026-09-27`  
-**Brand:** Gold-card / membership aesthetic — forest `#2F4F3E`, sage `#4F6559`, gold `#c9a227`. See `BRANDING.md`.
+**Brand:** Forest `#4C6458` (Homestead Logo Circle / wife chicken logo), deep `#3A4F45`, sage `#5A7366`, gold `#c9a227`. Hub = Critters on Call text. See `BRANDING.md`.
 
 ## Live URL (MUST stay exact)
 
