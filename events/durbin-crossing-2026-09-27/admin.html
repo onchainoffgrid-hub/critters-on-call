@@ -57,12 +57,13 @@
         <a class="btn btn-ghost" href="index.html">← Wheel</a>
       </div>
       <div class="stub">
-        <strong style="color:var(--gold)">Gold statues · <span id="gold-count">0</span> / 5</strong><br />
+        <strong style="color:var(--gold)">Golden Goat statues · <span id="gold-count">0</span> / 5</strong><br />
         Shared counter key <code>coc_dc_gold_awards_v1_durbin-crossing-2026-09-27</code> (same browser as wheel).
-        Claim form auto-increments; for Text GOAT unlocks, tap <strong>+1 Gold claimed</strong> when you hand out a statue.
-        At 5, the wheel re-weights Gold to 0 and converts any Gold landing to $10 thrift.
+        Claim form auto-increments on statue claims; for Text GOAT unlocks, tap <strong>+1 statue claimed</strong> when you hand out a statue.
+        At 5, the wheel re-weights statue to 0 and converts any statue landing to $10 thrift.
+        <strong>Gold membership is uncapped</strong> (only the physical statue is capped at 5).
         <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.65rem">
-          <button class="btn btn-primary" type="button" id="btn-gold-plus">+1 Gold claimed</button>
+          <button class="btn btn-primary" type="button" id="btn-gold-plus">+1 statue claimed</button>
           <button class="btn btn-outline" type="button" id="btn-gold-minus">−1</button>
         </div>
       </div>
@@ -93,7 +94,7 @@
   var STORE_GOLD = "coc_dc_gold_awards_v1_durbin-crossing-2026-09-27";
   var EVENT = "durbin-crossing-2026-09-27";
   var PIN = "0927";
-  var GOLD_CAP = 5;
+  var STATUE_CAP = 5;
 
   function readLeads() {
     try {
@@ -113,7 +114,7 @@
   }
 
   function syncGoldFloorFromLeads() {
-    var fromLeads = readLeads().filter(function (L) { return L.prize_kind === "premium"; }).length;
+    var fromLeads = readLeads().filter(function (L) { return L.prize_kind === "statue"; }).length;
     if (fromLeads > countGold()) {
       try { localStorage.setItem(STORE_GOLD, String(fromLeads)); } catch (e) {}
     }
@@ -160,7 +161,7 @@
 
   function downloadCsv() {
     var leads = readLeads();
-    var headers = ["timestamp","event_id","event_date","goat_id","prize_id","prize_label","prize_kind","code","email","phone"];
+    var headers = ["timestamp","event_id","event_date","goat_id","prize_id","prize_label","prize_kind","code","email","phone","spins_at_claim"];
     var lines = [headers.join(",")];
     leads.forEach(function (L) {
       lines.push(headers.map(function (h) { return csvEscape(L[h]); }).join(","));
@@ -202,7 +203,7 @@
   document.getElementById("btn-refresh").addEventListener("click", function () { render(); mailtoStub(); refreshGold(); });
   document.getElementById("btn-gold-plus").addEventListener("click", function () {
     var n = countGold();
-    if (n >= GOLD_CAP) { alert("Already at cap (" + GOLD_CAP + ")"); refreshGold(); return; }
+    if (n >= STATUE_CAP) { alert("Already at cap (" + STATUE_CAP + ")"); refreshGold(); return; }
     setGold(n + 1);
   });
   document.getElementById("btn-gold-minus").addEventListener("click", function () {
